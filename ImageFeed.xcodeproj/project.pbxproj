@@ -116,7 +116,7 @@
 					};
 				};
 			};
-			buildConfigurationList = 47136FD82B926AF200334982 /* Build configuration list for PBXProject "ImageFeed" */;
+			buildConfigurationList = 47136FD82B926AF200334982 /* Build configuration list for PBXProject "ImageFeedOriginal" */;
 			compatibilityVersion = "Xcode 14.0";
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
@@ -326,6 +326,7 @@
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
 				SUPPORTS_MACCATALYST = NO;
 				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = YES;
+				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = 1;
@@ -357,6 +358,7 @@
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
 				SUPPORTS_MACCATALYST = NO;
 				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = YES;
+				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = 1;
@@ -366,7 +368,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		47136FD82B926AF200334982 /* Build configuration list for PBXProject "ImageFeed" */ = {
+		47136FD82B926AF200334982 /* Build configuration list for PBXProject "ImageFeedOriginal" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				47136FEF2B926AF400334982 /* Debug */,

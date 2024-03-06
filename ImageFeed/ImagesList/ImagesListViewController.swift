@@ -8,6 +8,10 @@
 import UIKit
 
 class ImagesListViewController: UIViewController{
+    
+    override var preferredStatusBarStyle: UIStatusBarStyle{
+        return .lightContent
+    }
 
     @IBOutlet private var tableView: UITableView!
     
@@ -27,7 +31,6 @@ class ImagesListViewController: UIViewController{
         tableView.rowHeight = 200
         tableView.contentInset = UIEdgeInsets(top: 12, left: 0, bottom: 12, right: 0)
     }
-
 }
 
 
