@@ -7,7 +7,7 @@
 
 import UIKit
 
-class GradientView: UIView {
+final class GradientView: UIView {
     
     @IBInspectable private var startColor: UIColor? {
         didSet {
@@ -19,7 +19,6 @@ class GradientView: UIView {
             setupGradientColors()
         }
     }
-     
       let gradientLayer = CAGradientLayer()
      
      override init(frame: CGRect) {
@@ -44,7 +43,6 @@ class GradientView: UIView {
     private func setupGradientColors() {
          if let startColor = startColor, let endColor = endColor{
              gradientLayer.colors = [startColor.cgColor, endColor.cgColor]
-
          }
      }
  }
