@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="22505" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="BYZ-38-t0r">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="32700.99.1234" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="BYZ-38-t0r">
     <device id="retina6_12" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="22504"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="22684"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -110,8 +110,76 @@
             </objects>
             <point key="canvasLocation" x="29.770992366412212" y="3.5211267605633805"/>
         </scene>
+        <!--Profile View Controller-->
+        <scene sceneID="Ieh-Wf-h5G">
+            <objects>
+                <viewController storyboardIdentifier="ProfileViewController" id="Zqr-vE-3iY" customClass="ProfileViewController" customModule="ImageFeed" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="VLm-NC-mKN">
+                        <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" image="userPhoto" translatesAutoresizingMaskIntoConstraints="NO" id="tmn-p8-J5I">
+                                <rect key="frame" x="16" y="76" width="70" height="70"/>
+                            </imageView>
+                            <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="LMh-2S-ILo" userLabel="Exit Button">
+                                <rect key="frame" x="327" y="99" width="24" height="24"/>
+                                <state key="normal" title="Button"/>
+                                <buttonConfiguration key="configuration" style="plain" image="Exit"/>
+                                <connections>
+                                    <action selector="didTupExitButton:" destination="Zqr-vE-3iY" eventType="touchUpInside" id="zzz-Nb-Mfk"/>
+                                </connections>
+                            </button>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="Полина Жукова" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="61n-CO-8TR" userLabel="Name Lable">
+                                <rect key="frame" x="16" y="154" width="235" height="18"/>
+                                <color key="backgroundColor" red="0.10196078431372549" green="0.10588235294117647" blue="0.13333333333333333" alpha="1" colorSpace="calibratedRGB"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="23"/>
+                                <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="@ zhuk330" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="oj9-pb-z2w" userLabel="ID Label">
+                                <rect key="frame" x="16" y="180" width="99" height="18"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="13"/>
+                                <color key="textColor" red="0.68235294117647061" green="0.68627450980392157" blue="0.70588235294117641" alpha="1" colorSpace="calibratedRGB"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="Hello World!" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="tRE-Xf-E8p" userLabel="Status Label">
+                                <rect key="frame" x="16" y="206" width="77" height="18"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="13"/>
+                                <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                        </subviews>
+                        <viewLayoutGuide key="safeArea" id="0tF-sY-cQa"/>
+                        <color key="backgroundColor" red="0.10196078431372549" green="0.10588235294117647" blue="0.13333333333333333" alpha="1" colorSpace="calibratedRGB"/>
+                        <constraints>
+                            <constraint firstItem="oj9-pb-z2w" firstAttribute="leading" secondItem="0tF-sY-cQa" secondAttribute="leading" constant="16" id="9oU-MW-Z2C"/>
+                            <constraint firstItem="tmn-p8-J5I" firstAttribute="top" secondItem="VLm-NC-mKN" secondAttribute="top" constant="76" id="K9x-tj-g5t"/>
+                            <constraint firstItem="tRE-Xf-E8p" firstAttribute="leading" secondItem="VLm-NC-mKN" secondAttribute="leading" constant="16" id="RX8-KR-thj"/>
+                            <constraint firstItem="tRE-Xf-E8p" firstAttribute="top" secondItem="VLm-NC-mKN" secondAttribute="top" constant="206" id="Zhw-rh-pL0"/>
+                            <constraint firstItem="61n-CO-8TR" firstAttribute="leading" secondItem="VLm-NC-mKN" secondAttribute="leading" constant="16" id="buq-0B-hTj"/>
+                            <constraint firstItem="LMh-2S-ILo" firstAttribute="top" secondItem="VLm-NC-mKN" secondAttribute="top" constant="99" id="g9Q-9L-mS4"/>
+                            <constraint firstItem="61n-CO-8TR" firstAttribute="top" secondItem="VLm-NC-mKN" secondAttribute="top" constant="154" id="irq-Wt-FMQ"/>
+                            <constraint firstItem="oj9-pb-z2w" firstAttribute="top" secondItem="VLm-NC-mKN" secondAttribute="top" constant="180" id="jak-YM-04C"/>
+                            <constraint firstItem="LMh-2S-ILo" firstAttribute="leading" secondItem="VLm-NC-mKN" secondAttribute="leading" constant="327" id="q8G-Nm-LkW"/>
+                            <constraint firstItem="tmn-p8-J5I" firstAttribute="leading" secondItem="VLm-NC-mKN" secondAttribute="leading" constant="16" id="xT6-Dc-lae"/>
+                        </constraints>
+                    </view>
+                    <connections>
+                        <outlet property="extitButton" destination="LMh-2S-ILo" id="8Ks-3z-5gd"/>
+                        <outlet property="idLable" destination="oj9-pb-z2w" id="FVj-tW-qk7"/>
+                        <outlet property="nameLable" destination="61n-CO-8TR" id="YlQ-Cf-cBA"/>
+                        <outlet property="statusLable" destination="tRE-Xf-E8p" id="S53-k2-I7C"/>
+                        <outlet property="userPhoto" destination="tmn-p8-J5I" id="E0M-pI-1Xc"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="beN-Yc-tgM" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="743" y="4"/>
+        </scene>
     </scenes>
     <resources>
+        <image name="Exit" width="24" height="24"/>
         <image name="like_button_on" width="42" height="42"/>
+        <image name="userPhoto" width="350" height="350"/>
     </resources>
 </document>
