@@ -23,6 +23,9 @@ final class ImagesListViewController: UIViewController{
         formatter.locale = Locale(identifier: "ru_RU")
         return formatter
     }()
+    
+   
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         tableView.dataSource = self
@@ -62,7 +65,7 @@ extension ImagesListViewController {
         }
         cell.imageCell.image = image
         cell.dataLable.text = dateFormatter.string(from: Date())
-        cell.gradientCell = GradientView()
+      
         
         let isLiked = indexPath.row % 2 == 0
         let likedImage = isLiked ? UIImage(named: "like_button_off") : UIImage(named: "like_button_on")

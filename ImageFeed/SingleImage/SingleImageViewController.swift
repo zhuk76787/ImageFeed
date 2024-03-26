@@ -8,6 +8,7 @@
 import UIKit
 
 final class SingleImageViewController: UIViewController {
+    
     override var preferredStatusBarStyle: UIStatusBarStyle{
         return .lightContent
     }
@@ -16,69 +17,48 @@ final class SingleImageViewController: UIViewController {
         didSet {
             guard isViewLoaded else { return }
             singleImage.image = image
-            ImageInScrollView()
-            centerImage()
+            if let image = image {
+                imageInScrollView(image: image)
+            }
         }
     }
     
     @IBOutlet var singleImage: UIImageView!
-    @IBOutlet weak var imageScrollView: UIScrollView!
+    @IBOutlet weak var scrollView: UIScrollView!
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        imageScrollView.delegate = self
+        scrollView.delegate = self
         singleImage.image = image
-        self.ImageInScrollView()
-        self.centerImage()
-        imageScrollView.zoomScale = imageScrollView.minimumZoomScale
-       
-        
+        imageInScrollView(image: image)
+        scrollView.zoomScale = scrollView.minimumZoomScale
     }
-    
     
     @IBAction private func didTapBackButton() {
         dismiss(animated: true, completion: nil)
     }
+    
     @IBAction func didTapShareButton(_ sender: UIButton) {
         let share = UIActivityViewController(
-            activityItems: [image],
+            activityItems: [image!],
             applicationActivities: nil
         )
         present(share, animated: true, completion: nil)
-        
-    }
-    func configurateFor(imageSize: CGSize) {
-        imageScrollView.contentSize = imageSize
-        ImageInScrollView()
-        viewDidLayoutSubviews()
-    }
-
-    private func centerImage() {
-        let boundSize = imageScrollView.bounds.size
-        var frameToCenter = singleImage.frame
-        
-        if frameToCenter.size.width < boundSize.width {
-            frameToCenter.origin.x = (boundSize.width - frameToCenter.size.width) / 2
-        } else {
-            frameToCenter.origin.x = 0
-        }
-        if frameToCenter.size.height < boundSize.height {
-            frameToCenter.origin.y = (boundSize.height - frameToCenter.size.height) / 2
-        } else {
-            frameToCenter.origin.y = 0
-        }
-        
-        singleImage.frame = frameToCenter
     }
     
-    private func ImageInScrollView() {
-        let visibleRectSize = imageScrollView.bounds.size
+    func configurateFor(imageSize: CGSize) {
+        scrollView.contentSize = imageSize
+        imageInScrollView(image: image!)
+    }
+    
+    private func imageInScrollView(image: UIImage) {
+        view.layoutIfNeeded()
+        let visibleRectSize = scrollView.bounds.size
         let imageSize = image.size
         
         let xScale = visibleRectSize.width / imageSize.width
         let yScale = visibleRectSize.height / imageSize.height
         let minScale = min(xScale, yScale)
-        
         var maxScale: CGFloat = 1.0
         if minScale < 0.1 {
             maxScale = 0.3
@@ -89,40 +69,30 @@ final class SingleImageViewController: UIViewController {
         if minScale >= 0.5 {
             maxScale = max(1.0, minScale)
         }
-        imageScrollView.minimumZoomScale = minScale
-        imageScrollView.maximumZoomScale = maxScale
-        
-        let newContentSize = imageScrollView.contentSize
+        scrollView.minimumZoomScale = minScale
+        scrollView.maximumZoomScale = maxScale
+        let minZoomScale = scrollView.minimumZoomScale
+        let maxZoomScale = scrollView.maximumZoomScale
+        let scale = min(maxZoomScale, max(minZoomScale, minScale))
+        scrollView.setZoomScale(scale, animated: false)
+        scrollView.layoutIfNeeded()
+        let newContentSize = scrollView.contentSize
         let x = (newContentSize.width - visibleRectSize.width) / 2
         let y = (newContentSize.height - visibleRectSize.height) / 2
-        imageScrollView.setContentOffset(CGPoint(x: x, y: y), animated: false)
+        scrollView.setContentOffset(CGPoint(x: x, y: y), animated: false)
     }
-     
 }
-
 
 extension SingleImageViewController: UIScrollViewDelegate {
     func viewForZooming(in scrollView: UIScrollView) -> UIView? {
-        singleImage
+        self.singleImage
     }
-    func scrollViewDidZoom(_ scrollView: UIScrollView){
-        self.centerImage()
-    }
+  
+    func scrollViewDidZoom(_ scrollView: UIScrollView) {
+        let boundSize = scrollView.bounds.size
+        var frameToCenter = singleImage.frame
+        var offSetX = max((boundSize.width - frameToCenter.size.width) / 2, 0)
+        var offSetY = max((boundSize.height - frameToCenter.size.height) / 2, 0)
+        scrollView.contentInset = UIEdgeInsets(top: offSetY, left: offSetX, bottom: 0, right: 0)
+   }
 }
-
-                                         /*
-                                         let minZoomScale = imageScrollView.minimumZoomScale
-                                         let maxZoomScale = imageScrollView.maximumZoomScale
-                                         view.layoutIfNeeded()
-                                         let visibleRectSize = imageScrollView.bounds.size
-                                         let imageSize = image.size
-                                         let hScale = visibleRectSize.width / imageSize.width
-                                         let vScale = visibleRectSize.height / imageSize.height
-                                         let scale = min(maxZoomScale, max(minZoomScale, min(hScale, vScale)))
-                                         imageScrollView.setZoomScale(scale, animated: false)
-                                         imageScrollView.layoutIfNeeded()
-                                         let newContentSize = imageScrollView.contentSize
-                                         let x = (newContentSize.width - visibleRectSize.width) / 2
-                                         let y = (newContentSize.height - visibleRectSize.height) / 2
-                                         imageScrollView.setContentOffset(CGPoint(x: x, y: y), animated: false)
-                                          */
