@@ -45,12 +45,7 @@ final class SingleImageViewController: UIViewController {
         )
         present(share, animated: true, completion: nil)
     }
-    
-    func configurateFor(imageSize: CGSize) {
-        scrollView.contentSize = imageSize
-        imageInScrollView(image: image!)
-    }
-    
+   
     private func imageInScrollView(image: UIImage) {
         view.layoutIfNeeded()
         let visibleRectSize = scrollView.bounds.size
@@ -81,18 +76,70 @@ final class SingleImageViewController: UIViewController {
         let y = (newContentSize.height - visibleRectSize.height) / 2
         scrollView.setContentOffset(CGPoint(x: x, y: y), animated: false)
     }
+    
+   
 }
 
 extension SingleImageViewController: UIScrollViewDelegate {
     func viewForZooming(in scrollView: UIScrollView) -> UIView? {
         self.singleImage
     }
-  
+    
     func scrollViewDidZoom(_ scrollView: UIScrollView) {
         let boundSize = scrollView.bounds.size
-        var frameToCenter = singleImage.frame
-        var offSetX = max((boundSize.width - frameToCenter.size.width) / 2, 0)
-        var offSetY = max((boundSize.height - frameToCenter.size.height) / 2, 0)
+        let frameToCenter = singleImage.frame
+        let offSetX = max((boundSize.width - frameToCenter.size.width) / 2, 0)
+        let offSetY = max((boundSize.height - frameToCenter.size.height) / 2, 0)
         scrollView.contentInset = UIEdgeInsets(top: offSetY, left: offSetX, bottom: 0, right: 0)
-   }
+    }
+    
+    
 }
+
+/*
+func configurateFor(imageSize: CGSize) {
+    scrollView.contentSize = imageSize
+    imageInScrollView(image: image!)
+}
+*/
+
+/*
+ lazy var zoomingTap: UITapGestureRecognizer = {
+     let zoomingTap = UITapGestureRecognizer(target: scrollView, action: #selector(handelZoomingTap))
+     zoomingTap.numberOfTapsRequired = 2
+     return zoomingTap
+ }()
+ 
+ @objc func handelZoomingTap(sender: UITapGestureRecognizer) {
+     let location = sender.location(in: sender.view)
+     scrollView.zoom(point: location, animated: true)
+ }
+ 
+ func zoom(point: CGPoint, animated: Bool) {
+     let currectScale = scrollView.zoomScale
+     let minScale = scrollView.minimumZoomScale
+     let maxScale = scrollView.maximumZoomScale
+     
+     if (minScale == maxScale && minScale > 1) {
+         return
+     }
+     let toScale = maxScale
+     let finalScale = (currectScale == minScale) ? toScale : minScale
+     
+     let zoomRect = scrollView.zoomToCGRect(scale: finalScale, center: point)
+     scrollView.zoom(to: zoomRect, animated: animated)
+ }
+ 
+ func zoomToCGRect(scale: CGFloat, center: CGPoint) -> CGRect {
+     var zoomRect = CGRect.zero
+     let bounds = scrollView.bounds
+     
+     zoomRect.size.width = bounds.size.width / scale
+     zoomRect.size.height = bounds.size.height / scale
+     
+     zoomRect.origin.x = center.x - (zoomRect.size.width / 2)
+     zoomRect.origin.y = center.y - (zoomRect.size.height / 2)
+     
+     return zoomRect
+ }
+ */
