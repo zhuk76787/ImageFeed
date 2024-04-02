@@ -8,9 +8,9 @@
 import UIKit
 
 final class ProfileViewController: UIViewController {
-    private var label1: UILabel?
-    private var label2: UILabel?
-    private var label3: UILabel?
+    private var lableForName: UILabel?
+    private var labelForID: UILabel?
+    private var labelForStatus: UILabel?
         
         override func viewDidLoad() {
             super.viewDidLoad()
@@ -44,7 +44,7 @@ final class ProfileViewController: UIViewController {
             let idLable = UILabel()
             idLable.text = "@ekaterina_nov"
             idLable.textColor = #colorLiteral(red: 0.6823529412, green: 0.6862745098, blue: 0.7058823529, alpha: 1)
-            idLable.font = UIFont(name: "system", size: 13)
+            idLable.font = UIFont.systemFont(ofSize: 13, weight: .heavy)
             idLable.translatesAutoresizingMaskIntoConstraints = false
             view.addSubview(idLable)
             NSLayoutConstraint.activate([
@@ -57,7 +57,7 @@ final class ProfileViewController: UIViewController {
             let statusLable = UILabel()
             statusLable.text = "Hello, world!"
             statusLable.textColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)
-            statusLable.font = UIFont(name: "system", size: 13)
+            idLable.font = UIFont.systemFont(ofSize: 13, weight: .heavy)
             statusLable.translatesAutoresizingMaskIntoConstraints = false
             view.addSubview(statusLable)
             NSLayoutConstraint.activate([
@@ -67,9 +67,9 @@ final class ProfileViewController: UIViewController {
                 statusLable.topAnchor.constraint(equalTo: idLable.bottomAnchor, constant: 8)
             ])
         
-            self.label1 = nameLabel
-            self.label2 = idLable
-            self.label3 = statusLable
+            self.lableForName = nameLabel
+            self.labelForID = idLable
+            self.labelForStatus = statusLable
             
             let button = UIButton.systemButton(
                 with: UIImage(named: "Exit")!,
@@ -98,30 +98,6 @@ final class ProfileViewController: UIViewController {
             }
         }
 }
-/*
-    @IBOutlet weak var userPhoto: UIImageView!
-    @IBOutlet weak var extitButton: UIButton!
-    @IBOutlet weak var nameLable: UILabel!
-    @IBOutlet weak var idLable: UILabel!
-    @IBOutlet weak var statusLable: UILabel!
-    @IBAction func didTupExitButton(_ sender: Any) {
-    }
-  */
-    
- 
 
-        // Do any additional setup after loading the view.
-    
-    
-
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destination.
-        // Pass the selected object to the new view controller.
-    }
-    */
 
 
