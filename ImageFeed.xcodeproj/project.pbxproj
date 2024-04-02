@@ -16,6 +16,7 @@
 		47136FED2B926AF400334982 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 47136FEB2B926AF400334982 /* LaunchScreen.storyboard */; };
 		478C98CF2B94C7E500B9B787 /* ImagesListCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 478C98CE2B94C7E500B9B787 /* ImagesListCell.swift */; };
 		4797283F2BA37CD700820EBC /* ProfileViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4797283E2BA37CD700820EBC /* ProfileViewController.swift */; };
+		47A8143B2BBC322100F1AB9A /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47A8143A2BBC322100F1AB9A /* Constants.swift */; };
 		47E920482BA7097E00D3C24C /* SingleImageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47E920472BA7097E00D3C24C /* SingleImageViewController.swift */; };
 /* End PBXBuildFile section */
 
@@ -31,6 +32,7 @@
 		47136FEE2B926AF400334982 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		478C98CE2B94C7E500B9B787 /* ImagesListCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImagesListCell.swift; sourceTree = "<group>"; };
 		4797283E2BA37CD700820EBC /* ProfileViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileViewController.swift; sourceTree = "<group>"; };
+		47A8143A2BBC322100F1AB9A /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
 		47E920472BA7097E00D3C24C /* SingleImageViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SingleImageViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -66,6 +68,7 @@
 			children = (
 				47136FE02B926AF200334982 /* AppDelegate.swift */,
 				47136FE22B926AF200334982 /* SceneDelegate.swift */,
+				47A8143A2BBC322100F1AB9A /* Constants.swift */,
 				47E920462BA7094C00D3C24C /* SingleImage */,
 				479728402BA38FAE00820EBC /* Profile */,
 				478C98D02B94C84100B9B787 /* ImagesList */,
@@ -181,6 +184,7 @@
 				47113D8C2B96616F00C370F7 /* GradientView.swift in Sources */,
 				47136FE12B926AF200334982 /* AppDelegate.swift in Sources */,
 				47136FE32B926AF200334982 /* SceneDelegate.swift in Sources */,
+				47A8143B2BBC322100F1AB9A /* Constants.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
