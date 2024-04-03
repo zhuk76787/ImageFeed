@@ -44,7 +44,7 @@ final class ProfileViewController: UIViewController {
             let idLable = UILabel()
             idLable.text = "@ekaterina_nov"
             idLable.textColor = #colorLiteral(red: 0.6823529412, green: 0.6862745098, blue: 0.7058823529, alpha: 1)
-            idLable.font = UIFont.systemFont(ofSize: 13, weight: .heavy)
+            idLable.font = UIFont.systemFont(ofSize: 13, weight: .regular)
             idLable.translatesAutoresizingMaskIntoConstraints = false
             view.addSubview(idLable)
             NSLayoutConstraint.activate([
@@ -57,7 +57,7 @@ final class ProfileViewController: UIViewController {
             let statusLable = UILabel()
             statusLable.text = "Hello, world!"
             statusLable.textColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)
-            idLable.font = UIFont.systemFont(ofSize: 13, weight: .heavy)
+            idLable.font = UIFont.systemFont(ofSize: 13, weight: .regular)
             statusLable.translatesAutoresizingMaskIntoConstraints = false
             view.addSubview(statusLable)
             NSLayoutConstraint.activate([
