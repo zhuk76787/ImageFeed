@@ -70,10 +70,10 @@
 		47136FDF2B926AF200334982 /* ImageFeed */ = {
 			isa = PBXGroup;
 			children = (
-				4766A8F52BBD9AEF0052B7AF /* Auth */,
 				47136FE02B926AF200334982 /* AppDelegate.swift */,
 				47136FE22B926AF200334982 /* SceneDelegate.swift */,
 				47A8143A2BBC322100F1AB9A /* Constants.swift */,
+				4766A8F52BBD9AEF0052B7AF /* Auth */,
 				47E920462BA7094C00D3C24C /* SingleImage */,
 				479728402BA38FAE00820EBC /* Profile */,
 				478C98D02B94C84100B9B787 /* ImagesList */,
