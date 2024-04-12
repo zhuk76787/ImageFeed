@@ -78,8 +78,7 @@
                                 <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
                                 <state key="normal" image="nav_back_button"/>
                                 <connections>
-                                    <action selector="didTapNavBackButton" destination="OIt-Ri-HxU" eventType="touchUpInside" id="AmW-dx-XbW"/>
-                                    <action selector="didTapNavBackButton:" destination="OIt-Ri-HxU" eventType="touchUpInside" id="3r1-Zw-Pwg"/>
+                                    <action selector="didTapNavBackButton:" destination="OIt-Ri-HxU" eventType="touchUpInside" id="rpG-Sg-MuA"/>
                                 </connections>
                             </button>
                             <wkWebView contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="q9n-AP-eQ5">

@@ -8,8 +8,18 @@
 import UIKit
 
 final class OAuth2Service {
+    var oAuth2TokenStorage = OAuth2TokenStorage()
     static let shared = OAuth2Service()
-   // private init() {}
+    private var authToken: String? {
+        get {
+            OAuth2TokenStorage().token
+            
+        }
+        set {
+            OAuth2TokenStorage().token = newValue
+        }
+    }
+    private init() {}
     
     func makeOAuthTokenRequest(code: String) -> URLRequest {
         guard let baseURL = URL(string: "https://unsplash.com") else {
@@ -31,7 +41,7 @@ final class OAuth2Service {
         return request
     }
     
-    func fetchOAuthToken(for code: String, handler: @escaping (Result<Data,Error>) -> Void) {
+    func fetchOAuthToken(code: String, handler: @escaping (Result<Data,Error>) -> Void) {
         
         let requestWithCode = makeOAuthTokenRequest(code: code)
         
@@ -49,7 +59,18 @@ final class OAuth2Service {
             guard let data = data else { return }
             handler(.success(data))
         }
-        
-        task.resume()
+    }
+    
+    private func takeToken(
+        for request: URLRequest,
+        completion: @escaping (Result<OAuthTokenResponseBody, Error>) -> Void
+    ) -> URLSessionTask {
+        let decoder = JSONDecoder()
+        return URLSession.shared.data(for: request) { result in
+            let response = result.flatMap { data -> Result<OAuthTokenResponseBody, Error> in
+                Result { try decoder.decode(OAuthTokenResponseBody.self, from: data) }
+            }
+            completion(response)
+        }
     }
 }
