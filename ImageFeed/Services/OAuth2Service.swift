@@ -8,57 +8,48 @@
 import UIKit
 
 final class OAuth2Service {
+    
     var oAuth2TokenStorage = OAuth2TokenStorage()
     static let shared = OAuth2Service()
+    
     private var authToken: String? {
-        get {
-            OAuth2TokenStorage().token
-            
-        }
-        set {
-            OAuth2TokenStorage().token = newValue
-        }
+        get {OAuth2TokenStorage().token}
+        set {OAuth2TokenStorage().token = newValue}
     }
+    
     private init() {}
     
-    func makeOAuthTokenRequest(code: String) -> URLRequest {
-        guard let baseURL = URL(string: "https://unsplash.com") else {
-            preconditionFailure("Unable to construct baseUrl")
-        }
-        guard let url = URL(
-            string: "/oauth/token"
-            + "?client_id=\(Constants.accessKey)"
-            + "&&client_secret=\(Constants.secretKey)"
-            + "&&redirect_uri=\(Constants.redirectURI)"
-            + "&&code=\(code)"
-            + "&&grant_type=authorization_code",
-            relativeTo: baseURL
-        ) else {
-            preconditionFailure("Unable to construct baseUrl")
+    private func createOAuthRequest(code: String) -> URLRequest {
+        var urlComponents = URLComponents(string: "https://unsplash.com/oauth/token")!
+        urlComponents.queryItems = [
+            URLQueryItem(name: "client_id", value: Constants.accessKey),
+            URLQueryItem(name: "client_secret", value: Constants.secretKey),
+            URLQueryItem(name: "redirect_uri", value: Constants.redirectURI),
+            URLQueryItem(name: "code", value: code),
+            URLQueryItem(name: "grant_type", value: "authorization_code")
+        ]
+        guard let url = urlComponents.url else {
+            preconditionFailure("Unable to recognize url")
         }
         var request = URLRequest(url: url)
         request.httpMethod = "POST"
         return request
     }
     
-    func fetchOAuthToken(code: String, handler: @escaping (Result<Data,Error>) -> Void) {
-        
-        let requestWithCode = makeOAuthTokenRequest(code: code)
-        
-        let task = URLSession.shared.dataTask(with: requestWithCode){ data, response, error in
-            if let error = error {
-                handler(.failure(error))
-                return
+    func fetchOAuthToken(code: String, completion: @escaping (Result<String, Error>) -> Void) {
+        let request = createOAuthRequest(code: code)
+        let task = takeToken(for: request) { [weak self] result in
+            guard let self = self else { return }
+            switch result {
+            case .success(let body):
+                let authToken = body.accessToken
+                self.authToken = authToken
+                completion(.success(authToken))
+            case .failure(let error):
+                completion(.failure(error))
             }
-            
-            if let response = response as? HTTPURLResponse, response.statusCode < 200 || response.statusCode >= 300 {
-                handler(.failure(NetworkError.urlSessionError))
-                return
-            }
-            
-            guard let data = data else { return }
-            handler(.success(data))
         }
+        task.resume()
     }
     
     private func takeToken(

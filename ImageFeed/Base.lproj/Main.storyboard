@@ -303,18 +303,18 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Vector" translatesAutoresizingMaskIntoConstraints="NO" id="HwI-IZ-jjS">
-                                <rect key="frame" x="169.5" y="416" width="75" height="78"/>
+                                <rect key="frame" x="169.5" y="409" width="75" height="78"/>
                             </imageView>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="Qy3-TZ-e0A"/>
                         <color key="backgroundColor" red="0.10196078431372549" green="0.10588235294117647" blue="0.13333333333333333" alpha="1" colorSpace="calibratedRGB"/>
                         <constraints>
                             <constraint firstItem="HwI-IZ-jjS" firstAttribute="centerX" secondItem="H8m-Wq-kGr" secondAttribute="centerX" id="LvM-zc-2hN"/>
-                            <constraint firstItem="HwI-IZ-jjS" firstAttribute="centerY" secondItem="H8m-Wq-kGr" secondAttribute="centerY" constant="7" id="UDR-hO-k7W"/>
+                            <constraint firstItem="HwI-IZ-jjS" firstAttribute="centerY" secondItem="H8m-Wq-kGr" secondAttribute="centerY" id="UDR-hO-k7W"/>
                         </constraints>
                     </view>
                     <connections>
-                        <segue destination="YDN-YY-FRU" kind="presentation" identifier="SplashView" modalPresentationStyle="fullScreen" id="Bui-xt-lhb"/>
+                        <segue destination="YDN-YY-FRU" kind="presentation" identifier="SplashViewSegueIdentifier" modalPresentationStyle="fullScreen" id="Bui-xt-lhb"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Vsp-xy-nSn" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
@@ -324,7 +324,7 @@
         <!--Tab Bar Controller-->
         <scene sceneID="1Id-RK-zI6">
             <objects>
-                <tabBarController storyboardIdentifier="TabBarViewController" id="Jcm-JA-wzJ" customClass="TabBarController" sceneMemberID="viewController">
+                <tabBarController storyboardIdentifier="TabBarViewController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="Jcm-JA-wzJ" customClass="TabBarController" sceneMemberID="viewController">
                     <navigationItem key="navigationItem" id="KgP-HY-Egq"/>
                     <tabBar key="tabBar" contentMode="scaleAspectFill" insetsLayoutMarginsFromSafeArea="NO" id="XLx-Ze-Vbf">
                         <rect key="frame" x="0.0" y="0.0" width="393" height="49"/>

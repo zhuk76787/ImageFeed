@@ -5,29 +5,14 @@
 //  Created by Дмитрий Жуков on 4/10/24.
 //
 
-import UIKit
+import Foundation
 
-protocol OAuth2TokenStorageProtocol {
-    var token: String? { get set }
-}
-
-final class OAuth2TokenStorage: OAuth2TokenStorageProtocol {
+final class OAuth2TokenStorage {
     
-    private enum Keys: String {
-        case token
-    }
-    
-    private let userDefaults = UserDefaults.standard
+    private let tokenKey = "Bearer Token"
     
     var token: String? {
-        get {
-            guard UserDefaults.standard.string(forKey: Keys.token.rawValue) != nil else {
-                return ""
-            }
-            return self.token
-        }
-        set {
-            let _: Void = UserDefaults.standard.set(newValue, forKey: Keys.token.rawValue)
-        }
+        get {return UserDefaults.standard.string(forKey: tokenKey)}
+        set {UserDefaults.standard.set(newValue, forKey: tokenKey)}
     }
 }

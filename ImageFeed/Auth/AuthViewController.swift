@@ -12,6 +12,7 @@ protocol AuthViewControllerDelegate: AnyObject {
 }
 
 final class AuthViewController: UIViewController {
+    
     private let showWebViewSequeIdentifier = "ShowWebView"
     private let oauth2Service = OAuth2Service.shared
     weak var delegate: AuthViewControllerDelegate?
@@ -31,19 +32,17 @@ final class AuthViewController: UIViewController {
 extension AuthViewController: WebViewViewControllerDelegate {
     func webViewViewController(_ vc: WebViewViewController, didAuthenticateWithCode code: String) {
         vc.dismiss(animated: true)
-        
         oauth2Service.fetchOAuthToken(code: code) { [self] result in
             switch result{
             case .success:
                 delegate?.didAuthenticate(self)
-                
             case .failure:
                 // TODO [sprint_11]
                 break
             }
         }
     }
-         
+    
     func webViewViewControllerDidCancel(_ vc: WebViewViewController) {
         dismiss(animated: true)
     }

@@ -19,6 +19,7 @@ final class GradientView: UIView {
             setupGradientColors()
         }
     }
+    
     let gradientLayer = CAGradientLayer()
     
     override init(frame: CGRect) {

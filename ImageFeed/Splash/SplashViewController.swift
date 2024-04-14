@@ -10,12 +10,10 @@ import UIKit
 final class SplashViewController: UIViewController {
     
     private let oauthTokenStorage = OAuth2TokenStorage()
-    
-    private let splashViewIdentifier = "SplashView"
+    private let splashViewIdentifier = "SplashViewSegueIdentifier"
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(true)
-        
         if oauthTokenStorage.token != nil {
             switchToTabBarController()
         } else {
@@ -28,19 +26,17 @@ final class SplashViewController: UIViewController {
             assertionFailure("Invalid window configuration")
             return
         }
-        
         let tabBarController = UIStoryboard(name: "Main", bundle: .main)
             .instantiateViewController(withIdentifier: "TabBarViewController")
         
         window.rootViewController = tabBarController
+        print("TabBar")
     }
 }
 
 extension SplashViewController {
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        
         if segue.identifier == splashViewIdentifier {
-            
             guard
                 let navigationController = segue.destination as? UINavigationController,
                 let viewController = navigationController.viewControllers[0] as? AuthViewController
@@ -48,9 +44,7 @@ extension SplashViewController {
                 assertionFailure("Failed to prepare for \(splashViewIdentifier)")
                 return
             }
-            
             viewController.delegate = self
-            
         } else {
             super.prepare(for: segue, sender: sender)
         }
@@ -60,7 +54,6 @@ extension SplashViewController {
 extension SplashViewController: AuthViewControllerDelegate {
     func didAuthenticate(_ vc: AuthViewController) {
         vc.dismiss(animated: true)
-        
         switchToTabBarController()
     }
 }
