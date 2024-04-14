@@ -20,15 +20,15 @@ final class OAuth2Service {
     private init() {}
     
     private func createOAuthRequest(code: String) -> URLRequest {
-        var urlComponents = URLComponents(string: "https://unsplash.com/oauth/token")!
-        urlComponents.queryItems = [
+        var urlComponents = URLComponents(string: "https://unsplash.com/oauth/token")
+        urlComponents?.queryItems = [
             URLQueryItem(name: "client_id", value: Constants.accessKey),
             URLQueryItem(name: "client_secret", value: Constants.secretKey),
             URLQueryItem(name: "redirect_uri", value: Constants.redirectURI),
             URLQueryItem(name: "code", value: code),
             URLQueryItem(name: "grant_type", value: "authorization_code")
         ]
-        guard let url = urlComponents.url else {
+        guard let url = urlComponents?.url else {
             preconditionFailure("Unable to recognize url")
         }
         var request = URLRequest(url: url)
