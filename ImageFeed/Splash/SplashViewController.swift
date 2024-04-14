@@ -30,7 +30,6 @@ final class SplashViewController: UIViewController {
             .instantiateViewController(withIdentifier: "TabBarViewController")
         
         window.rootViewController = tabBarController
-        print("TabBar")
     }
 }
 
