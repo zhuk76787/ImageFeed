@@ -18,7 +18,7 @@ final class OAuth2TokenStorage: OAuth2TokenStorageProtocol {
     }
     
     private let userDefaults = UserDefaults.standard
-       
+    
     var token: String? {
         get {
             guard UserDefaults.standard.string(forKey: Keys.token.rawValue) != nil else {

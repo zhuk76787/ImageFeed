@@ -16,7 +16,7 @@ final class SplashViewController: UIViewController {
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(true)
         
-        if let token = oauthTokenStorage.token {
+        if oauthTokenStorage.token != nil {
             switchToTabBarController()
         } else {
             performSegue(withIdentifier: splashViewIdentifier, sender: nil)
@@ -31,7 +31,7 @@ final class SplashViewController: UIViewController {
         
         let tabBarController = UIStoryboard(name: "Main", bundle: .main)
             .instantiateViewController(withIdentifier: "TabBarViewController")
-    
+        
         window.rootViewController = tabBarController
     }
 }
@@ -48,7 +48,7 @@ extension SplashViewController {
                 assertionFailure("Failed to prepare for \(splashViewIdentifier)")
                 return
             }
-        
+            
             viewController.delegate = self
             
         } else {
