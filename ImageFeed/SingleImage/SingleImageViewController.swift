@@ -40,12 +40,12 @@ final class SingleImageViewController: UIViewController {
     
     @IBAction func didTapShareButton(_ sender: UIButton) {
         let share = UIActivityViewController(
-            activityItems: [image!],
+            activityItems: [image as Any],
             applicationActivities: nil
         )
         present(share, animated: true, completion: nil)
     }
-   
+    
     private func imageInScrollView(image: UIImage) {
         view.layoutIfNeeded()
         let visibleRectSize = scrollView.bounds.size
@@ -76,11 +76,10 @@ final class SingleImageViewController: UIViewController {
         let y = (newContentSize.height - visibleRectSize.height) / 2
         scrollView.setContentOffset(CGPoint(x: x, y: y), animated: false)
     }
-    
-   
 }
 
 extension SingleImageViewController: UIScrollViewDelegate {
+    
     func viewForZooming(in scrollView: UIScrollView) -> UIView? {
         self.singleImage
     }
@@ -92,7 +91,5 @@ extension SingleImageViewController: UIScrollViewDelegate {
         let offSetY = max((boundSize.height - frameToCenter.size.height) / 2, 0)
         scrollView.contentInset = UIEdgeInsets(top: offSetY, left: offSetX, bottom: 0, right: 0)
     }
-    
-    
 }
 

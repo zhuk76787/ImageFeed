@@ -8,22 +8,20 @@
 import UIKit
 
 final class ImagesListViewController: UIViewController{
+    
     private let showSingleImageSegueIdentifier = "ShowSingleImage"
+    private let photosName: [String] = Array(0..<20).map{"\($0)"}
     
     override var preferredStatusBarStyle: UIStatusBarStyle{
         return .lightContent
     }
     @IBOutlet private var tableView: UITableView!
     
-    private let photosName: [String] = Array(0..<20).map{"\($0)"}
-    
     private lazy var dateFormatter: DateFormatter = {
         let formatter = DateFormatter()
         formatter.dateFormat = "dd MMMM yyyy"
         return formatter
     }()
-    
-   
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -58,13 +56,13 @@ extension ImagesListViewController: UITableViewDataSource {
 }
 
 extension ImagesListViewController {
-    func configCell(for cell: ImagesListCell, with indexPath: IndexPath) { 
+    func configCell(for cell: ImagesListCell, with indexPath: IndexPath) {
         guard let image = UIImage(named: photosName[indexPath.row]) else {
             return
         }
         cell.imageCell.image = image
         cell.dataLable.text = dateFormatter.string(from: Date())
-      
+        
         
         let isLiked = indexPath.row % 2 == 0
         let likedImage = isLiked ? UIImage(named: "like_button_off") : UIImage(named: "like_button_on")
