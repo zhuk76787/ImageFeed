@@ -7,19 +7,25 @@
 
 import UIKit
 
+enum AuthServiceError: Error {
+    case invalidRequest
+}
+
 final class OAuth2Service {
     
     var oAuth2TokenStorage = OAuth2TokenStorage()
     static let shared = OAuth2Service()
-    
     private var authToken: String? {
         get {OAuth2TokenStorage().token}
         set {OAuth2TokenStorage().token = newValue}
     }
+    private let urlSession = URLSession.shared
+    private var task: URLSessionTask?
+    private var lastCode: String?
     
     private init() {}
     
-    private func createOAuthRequest(code: String) -> URLRequest {
+    private func createOAuthRequest(code: String) -> URLRequest? {
         var urlComponents = URLComponents(string: "https://unsplash.com/oauth/token")
         urlComponents?.queryItems = [
             URLQueryItem(name: "client_id", value: Constants.accessKey),
@@ -29,7 +35,8 @@ final class OAuth2Service {
             URLQueryItem(name: "grant_type", value: "authorization_code")
         ]
         guard let url = urlComponents?.url else {
-            preconditionFailure("Unable to recognize url")
+            assertionFailure("Failed to create URL")
+            return nil
         }
         var request = URLRequest(url: url)
         request.httpMethod = "POST"
@@ -37,22 +44,36 @@ final class OAuth2Service {
     }
     
     func fetchOAuthToken(code: String, completion: @escaping (Result<String, Error>) -> Void) {
-        let request = createOAuthRequest(code: code)
+        assert(Thread.isMainThread)
+        guard lastCode != code else {
+            completion(.failure(AuthServiceError.invalidRequest))
+            return
+        }
+        task?.cancel()
+        lastCode = code
+        guard let request = createOAuthRequest(code: code) else {
+            completion(.failure(AuthServiceError.invalidRequest))
+            return
+        }
         let task = takeToken(for: request) { [weak self] result in
-            guard let self = self else { return }
-            switch result {
-            case .success(let body):
-                let authToken = body.accessToken
-                self.authToken = authToken
-                completion(.success(authToken))
-            case .failure(let error):
-                completion(.failure(error))
+            DispatchQueue.main.async {
+                switch result {
+                case .success(let body):
+                    let authToken = body.accessToken
+                    self?.authToken = authToken
+                    completion(.success(authToken))
+                case .failure(let error):
+                    completion(.failure(error))
+                }
+                self?.task = nil
+                self?.lastCode = nil
             }
         }
+        self.task = task
         task.resume()
     }
     
-    private func takeToken(
+    func takeToken(
         for request: URLRequest,
         completion: @escaping (Result<OAuthTokenResponseBody, Error>) -> Void
     ) -> URLSessionTask {
@@ -65,3 +86,4 @@ final class OAuth2Service {
         }
     }
 }
+

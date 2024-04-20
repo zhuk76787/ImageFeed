@@ -13,6 +13,9 @@ final class ProfileViewController: UIViewController {
     private var labelForID: UILabel?
     private var labelForStatus: UILabel?
     
+    private let profileService = ProfileService()
+    
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = #colorLiteral(red: 0.1352768838, green: 0.1420838535, blue: 0.1778985262, alpha: 1)
@@ -30,7 +33,7 @@ final class ProfileViewController: UIViewController {
         ])
         
         let nameLabel = UILabel()
-        nameLabel.text = "Екатерина Новикова"
+        nameLabel.text = profileService.profile?.name
         nameLabel.textColor = #colorLiteral(red: 1, green: 0.9999999404, blue: 1, alpha: 1)
         nameLabel.font = UIFont.boldSystemFont(ofSize: 23)
         nameLabel.translatesAutoresizingMaskIntoConstraints = false
@@ -43,7 +46,7 @@ final class ProfileViewController: UIViewController {
         ])
         
         let idLable = UILabel()
-        idLable.text = "@ekaterina_nov"
+        idLable.text = profileService.profile?.loginName
         idLable.textColor = #colorLiteral(red: 0.6823529412, green: 0.6862745098, blue: 0.7058823529, alpha: 1)
         idLable.font = UIFont.systemFont(ofSize: 13, weight: .regular)
         idLable.translatesAutoresizingMaskIntoConstraints = false
