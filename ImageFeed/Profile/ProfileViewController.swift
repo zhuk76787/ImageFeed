@@ -12,8 +12,8 @@ final class ProfileViewController: UIViewController {
     private var lableForName: UILabel?
     private var labelForID: UILabel?
     private var labelForStatus: UILabel?
+       
     
-    private let profileService = ProfileService()
     
     
     override func viewDidLoad() {
@@ -33,7 +33,7 @@ final class ProfileViewController: UIViewController {
         ])
         
         let nameLabel = UILabel()
-        nameLabel.text = profileService.profile?.name
+        //nameLabel.text = profileService.profile?.name
         nameLabel.textColor = #colorLiteral(red: 1, green: 0.9999999404, blue: 1, alpha: 1)
         nameLabel.font = UIFont.boldSystemFont(ofSize: 23)
         nameLabel.translatesAutoresizingMaskIntoConstraints = false
@@ -46,7 +46,7 @@ final class ProfileViewController: UIViewController {
         ])
         
         let idLable = UILabel()
-        idLable.text = profileService.profile?.loginName
+      //  idLable.text = profileService.profile?.loginName
         idLable.textColor = #colorLiteral(red: 0.6823529412, green: 0.6862745098, blue: 0.7058823529, alpha: 1)
         idLable.font = UIFont.systemFont(ofSize: 13, weight: .regular)
         idLable.translatesAutoresizingMaskIntoConstraints = false
@@ -92,6 +92,7 @@ final class ProfileViewController: UIViewController {
             button.centerYAnchor.constraint(equalTo: imageView.centerYAnchor)
         ])
     }
+    
     
     @objc
     private func didTapButton() {

@@ -14,56 +14,44 @@ enum ProfileServiceError: Error {
 final class ProfileService {
     
     var oAuth2TokenStorage = OAuth2TokenStorage()
-    private var task: URLSessionTask?
-    private var lastCode: String?
-    private(set) var profile: Profile?
+    static let shared = ProfileService(); private init() {}
     
-    private func createProfileRequest(code: String) -> URLRequest? {
-        var urlComponents = URLComponents(string: Constants.defaultBaseURL)
-        urlComponents?.queryItems = [URLQueryItem(name: "me", value: Constants.getTheUserProfile)]
+    private func createProfileRequest() -> URLRequest? {
+        let urlComponents = URLComponents(string: Constants.defaultBaseURL + "/me" )
         
         guard let url = urlComponents?.url else {
             assertionFailure("Failed to create URL")
             return nil
         }
         var request = URLRequest(url: url)
-        request.setValue("Bearer \(oAuth2TokenStorage)", forHTTPHeaderField: "Authorization")
+        request.setValue("Bearer \(oAuth2TokenStorage.token)", forHTTPHeaderField: "Authorization")
+        print(request)
         return request
     }
     
-    func fetchProfile(_ token: String, completion: @escaping (Result<Profile, Error>) -> Void) {
-        assert(Thread.isMainThread)
-        guard lastCode != token else {
+    func fetchProfile( completion: @escaping (Result<ProfileResult, Error>) -> Void) {
+        guard let request = createProfileRequest() else {
             completion(.failure(ProfileServiceError.invalidRequest))
             return
         }
-        task?.cancel()
-        lastCode = token
-        guard let request = createProfileRequest(code: token) else {
-            completion(.failure(ProfileServiceError.invalidRequest))
-            return
-        }
-        let task = URLSession.shared.data(for: request) { [weak self] result in
-            DispatchQueue.main.async {
-                switch result {
-                case .success(let data):
-                    do {
-                        let decoder = JSONDecoder()
-                        decoder.keyDecodingStrategy = .convertFromSnakeCase
-                        let profileResult = try decoder.decode(ProfileResult.self, from: data)
-                        let profile = Profile(userName: profileResult.userName, name: profileResult.firstName + " " + (profileResult.lastName ?? "") , loginName: "@\(profileResult.userName)", bio: (profileResult.bio ?? ""))
-                        completion(.success(profile))
-                    } catch {
-                        completion(.failure(error))
-                    }
-                case .failure(let error):
+        URLSession.shared.dataTask(with: request) { data, response, error in
+            guard let data else {
+                if let error {
                     completion(.failure(error))
                 }
-                self?.task = nil
-                self?.lastCode = nil
+              
+                return
             }
-        }
-        self.task = task
-        task.resume()
+ //          print( String(data: data, encoding: .utf8))
+            
+            let decoder = JSONDecoder()
+            decoder.keyDecodingStrategy = .convertFromSnakeCase
+            do {
+                let profileData = try decoder.decode(ProfileResult.self, from: data)
+                completion(.success(profileData))
+            } catch {
+                print(String(describing: error))
+            }
+        }.resume()
     }
 }
