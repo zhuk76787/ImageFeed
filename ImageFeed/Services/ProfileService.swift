@@ -13,8 +13,9 @@ enum ProfileServiceError: Error {
 
 final class ProfileService {
     
-    var oAuth2TokenStorage = OAuth2TokenStorage()
+    var storage = OAuth2TokenStorage()
     static let shared = ProfileService(); private init() {}
+    private(set) var profile: Profile?
     
     private func createProfileRequest() -> URLRequest? {
         let urlComponents = URLComponents(string: Constants.defaultBaseURL + "/me" )
@@ -23,13 +24,13 @@ final class ProfileService {
             assertionFailure("Failed to create URL")
             return nil
         }
+        guard let token = storage.token else {return nil}
         var request = URLRequest(url: url)
-        request.setValue("Bearer \(oAuth2TokenStorage.token)", forHTTPHeaderField: "Authorization")
-        print(request)
+        request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
         return request
     }
     
-    func fetchProfile( completion: @escaping (Result<ProfileResult, Error>) -> Void) {
+    func fetchProfile(completion: @escaping (Result<Profile, Error>) -> Void) {
         guard let request = createProfileRequest() else {
             completion(.failure(ProfileServiceError.invalidRequest))
             return
@@ -39,18 +40,22 @@ final class ProfileService {
                 if let error {
                     completion(.failure(error))
                 }
-              
                 return
             }
- //          print( String(data: data, encoding: .utf8))
-            
             let decoder = JSONDecoder()
             decoder.keyDecodingStrategy = .convertFromSnakeCase
             do {
-                let profileData = try decoder.decode(ProfileResult.self, from: data)
-                completion(.success(profileData))
+                let profileResult = try decoder.decode(ProfileResult.self, from: data)
+                let person = Profile(userName: profileResult.username,
+                                     name: profileResult.name,
+                                     loginName: "@\(profileResult.username)",
+                                     bio: profileResult.bio)
+                completion(.success(person))
+                self.profile = person
+                guard let profile = self.profile else {return}
+                self.profile = profile
             } catch {
-                print(String(describing: error))
+                completion(.failure(error))
             }
         }.resume()
     }

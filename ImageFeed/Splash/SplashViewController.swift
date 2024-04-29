@@ -9,24 +9,24 @@ import UIKit
 
 final class SplashViewController: UIViewController {
     
-    private let oauthTokenStorage = OAuth2TokenStorage()
+       private let storage = OAuth2TokenStorage()
     private let splashViewIdentifier = "SplashViewSegueIdentifier"
-    
-    private let storage = OAuth2TokenStorage()
-    
+
+
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(true)
-        if oauthTokenStorage.token != nil {
+        
+        if storage.token != nil {
             ProfileService.shared.fetchProfile { result in
-                switch result {
-                case .success(let profileData):
-                    print("Data: \(profileData)")
-                case .failure(let failure):
-                    print(failure.localizedDescription )
-                }
+              
+            switch result {
+            case .success(let person):
+               print("\(person)")
+            case .failure(let failure):
+                print(failure.localizedDescription )
             }
+        }
             switchToTabBarController()
-           
         } else {
             performSegue(withIdentifier: splashViewIdentifier, sender: nil)
         }
@@ -66,18 +66,21 @@ extension SplashViewController: AuthViewControllerDelegate {
         vc.dismiss(animated: true)
         ProfileService.shared.fetchProfile { result in
             switch result {
-            case .success(let data):
-                print("Data: \(data)")
-            case .failure(let failure):
-                print(failure.localizedDescription )
-            }
+        case.success(let person):
+           print("\(person)")
+        case.failure(let failure):
+            print(failure.localizedDescription )
         }
-        
-        guard storage.token != nil else {return}
-        
+    }
         switchToTabBarController()
-        
-       
     }
 }
+
+//extension SplashViewController: AuthViewControllerDelegate {
+//    func didAuthenticate(_ vc: AuthViewController) {
+//        vc.dismiss(animated: true)
+//        guard storage.token != nil else {return}
+//        switchToTabBarController()
+//    }
+//}
 
