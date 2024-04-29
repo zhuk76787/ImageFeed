@@ -10,6 +10,7 @@ import UIKit
 final class SplashViewController: UIViewController {
     
        private let storage = OAuth2TokenStorage()
+    private let profileService = ProfileService.shared
     private let splashViewIdentifier = "SplashViewSegueIdentifier"
 
 
@@ -17,16 +18,14 @@ final class SplashViewController: UIViewController {
         super.viewDidAppear(true)
         
         if storage.token != nil {
-            ProfileService.shared.fetchProfile { result in
-              
-            switch result {
-            case .success(let person):
-               print("\(person)")
-            case .failure(let failure):
-                print(failure.localizedDescription )
+            profileService.fetchProfile { result in
+                switch result {
+                case .success:
+                    self.switchToTabBarController()
+                case .failure(let failure):
+                    print(failure.localizedDescription )
+                }
             }
-        }
-            switchToTabBarController()
         } else {
             performSegue(withIdentifier: splashViewIdentifier, sender: nil)
         }
@@ -64,10 +63,13 @@ extension SplashViewController {
 extension SplashViewController: AuthViewControllerDelegate {
     func didAuthenticate(_ vc: AuthViewController) {
         vc.dismiss(animated: true)
-        ProfileService.shared.fetchProfile { result in
+        guard storage.token != nil else {return}
+        UIBlockingProgressHUD.show()
+        profileService.fetchProfile { result in
+            UIBlockingProgressHUD.dismiss()
             switch result {
-        case.success(let person):
-           print("\(person)")
+        case.success:
+                self.switchToTabBarController()
         case.failure(let failure):
             print(failure.localizedDescription )
         }

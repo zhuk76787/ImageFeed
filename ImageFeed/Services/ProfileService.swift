@@ -52,8 +52,6 @@ final class ProfileService {
                                      bio: profileResult.bio)
                 completion(.success(person))
                 self.profile = person
-                guard let profile = self.profile else {return}
-                self.profile = profile
             } catch {
                 completion(.failure(error))
             }

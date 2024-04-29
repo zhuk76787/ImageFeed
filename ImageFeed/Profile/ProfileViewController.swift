@@ -12,23 +12,10 @@ final class ProfileViewController: UIViewController {
     private var lableForName: UILabel?
     private var labelForID: UILabel?
     private var labelForStatus: UILabel?
-    let profile = ProfileService.shared.profile
-    
-    
-    func updateProfileDetails(profile: Profile?) {
-        guard let profile else {return}
-        let name = profile.name
-        let loginName = profile.loginName
-        let bio = profile.bio
-        self.lableForName?.text = name
-        self.labelForID?.text = loginName
-        self.labelForStatus?.text = bio
-    }
-
+    private let profileService = ProfileService.shared
+   
     override func viewDidLoad() {
         super.viewDidLoad()
-//        guard let profile else {return}
-        updateProfileDetails(profile: profile)
         view.backgroundColor = #colorLiteral(red: 0.1352768838, green: 0.1420838535, blue: 0.1778985262, alpha: 1)
         let profileImage = UIImage(named: "userPhoto")
         
@@ -44,7 +31,7 @@ final class ProfileViewController: UIViewController {
         ])
         
         let nameLabel = UILabel()
-        nameLabel.text = "Екатерина Новикова"
+        nameLabel.text = "\(profileService.profile?.name ?? "Екатерина Новикова")"
         nameLabel.textColor = #colorLiteral(red: 1, green: 0.9999999404, blue: 1, alpha: 1)
         nameLabel.font = UIFont.boldSystemFont(ofSize: 23)
         nameLabel.translatesAutoresizingMaskIntoConstraints = false
@@ -57,7 +44,7 @@ final class ProfileViewController: UIViewController {
         ])
         
         let idLable = UILabel()
-        idLable.text = "@ekaterina_nov"
+        idLable.text = "\(profileService.profile?.loginName ?? "@ekaterina_nov")"
         idLable.textColor = #colorLiteral(red: 0.6823529412, green: 0.6862745098, blue: 0.7058823529, alpha: 1)
         idLable.font = UIFont.systemFont(ofSize: 13, weight: .regular)
         idLable.translatesAutoresizingMaskIntoConstraints = false
@@ -70,7 +57,7 @@ final class ProfileViewController: UIViewController {
         ])
         
         let statusLable = UILabel()
-        statusLable.text = "Hellow, world!"
+        statusLable.text = "\(profileService.profile?.bio ?? "Hellow, world!")"
         statusLable.textColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)
         idLable.font = UIFont.systemFont(ofSize: 13, weight: .regular)
         statusLable.translatesAutoresizingMaskIntoConstraints = false

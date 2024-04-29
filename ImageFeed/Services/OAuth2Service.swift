@@ -14,16 +14,12 @@ enum AuthServiceError: Error {
 final class OAuth2Service {
     
     var oAuth2TokenStorage = OAuth2TokenStorage()
-    static let shared = OAuth2Service()
-//    private var authToken: String? {
-//        get {OAuth2TokenStorage().token}
-//        set {OAuth2TokenStorage().token = newValue}
-//    }
+    static let shared = OAuth2Service(); private init() {}
     private let urlSession = URLSession.shared
     private var task: URLSessionTask?
     private var lastCode: String?
     
-    private init() {}
+    
     
     private func createOAuthRequest(code: String) -> URLRequest? {
         var urlComponents = URLComponents(string: "https://unsplash.com/oauth/token")
