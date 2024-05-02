@@ -13,7 +13,7 @@ enum ProfileServiceError: Error {
 
 final class ProfileService {
     
-    var storage = OAuth2TokenStorage()
+    private var storage = OAuth2TokenStorage()
     static let shared = ProfileService(); private init() {}
     private(set) var profile: Profile?
     

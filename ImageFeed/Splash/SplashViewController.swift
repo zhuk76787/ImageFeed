@@ -9,23 +9,35 @@ import UIKit
 
 final class SplashViewController: UIViewController {
     
-       private let storage = OAuth2TokenStorage()
+    private let storage = OAuth2TokenStorage()
     private let profileService = ProfileService.shared
+    private let profileImageService = ProfileImageService.shared
     private let splashViewIdentifier = "SplashViewSegueIdentifier"
-
-
+    
+    
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(true)
         
         if storage.token != nil {
-            profileService.fetchProfile { result in
+            profileService.fetchProfile { [self] result in
                 switch result {
                 case .success:
-                    self.switchToTabBarController()
+                    profileImageService.fetchProfileImageURL { result in
+                        switch result{
+                        case.success(let data):
+                            print(data)
+                        case .failure(let failure):
+                            print(failure.localizedDescription )
+                        }
+                    }
+                    DispatchQueue.main.async{
+                        self.switchToTabBarController()
+                    }
                 case .failure(let failure):
                     print(failure.localizedDescription )
                 }
             }
+           
         } else {
             performSegue(withIdentifier: splashViewIdentifier, sender: nil)
         }
@@ -68,13 +80,24 @@ extension SplashViewController: AuthViewControllerDelegate {
         profileService.fetchProfile { result in
             UIBlockingProgressHUD.dismiss()
             switch result {
-        case.success:
-                self.switchToTabBarController()
-        case.failure(let failure):
-            print(failure.localizedDescription )
+            case.success:
+                self.profileImageService.fetchProfileImageURL { result in
+                    switch result{
+                    case.success(let userData):
+                        print(userData)
+                    case .failure(let failure):
+                        print(failure.localizedDescription )
+                    }
+                }
+                DispatchQueue.main.async{
+                    self.switchToTabBarController()
+                }
+            case.failure(let failure):
+                print(failure.localizedDescription )    
+            }
         }
-    }
-        switchToTabBarController()
+        
+        //        switchToTabBarController()
     }
 }
 

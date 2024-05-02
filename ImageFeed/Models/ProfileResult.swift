@@ -7,20 +7,20 @@
 
 import Foundation
 
-    struct ProfileResult: Decodable {
-        var username: String
-        var name: String
-        var bio: String?
-        enum CodingKeys: String, CodingKey {
-             case username = "username"
-             case name 
-             case bio
-         }
+struct ProfileResult: Codable {
+    var username: String
+    var name: String
+    var bio: String?
+    enum CodingKeys: String, CodingKey {
+        case username = "username"
+        case name 
+        case bio
     }
-    
-    
-   
-    
-  
-        
-        
+}
+
+
+
+
+
+
+
