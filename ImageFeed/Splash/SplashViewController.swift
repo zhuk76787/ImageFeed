@@ -20,35 +20,35 @@ final class SplashViewController: UIViewController {
         super.viewDidAppear(true)
         
         if let token = storage.token {
-            profileService.fetchProfile(token) { [self] result in
+            profileService.fetchProfile(token) { result in
                 switch result {
                 case .success(_):
-                    print(result)
                     DispatchQueue.main.async{
                         self.switchToTabBarController()
                     }
-                    guard let userName = profileService.profile?.userName else { return }
-                    profileImageService.fetchProfileImageURL(username: userName) {  result in
-                        switch result {
-                        case .success(let avatarURL):
-                    
-                            print(avatarURL)
-                        case .failure(let failure):
-                            print(failure.localizedDescription)
-                            break
-                        }
-                        }
+                    print(result)
                 case .failure(let failure):
                     print(failure.localizedDescription )
                     break
                 }
-                
             }
-           
         } else {
             performSegue(withIdentifier: splashViewIdentifier, sender: nil)
         }
-        
+        if let userName = profileService.profile?.userName {
+            profileImageService.fetchProfileImageURL(username: userName) { result in
+                switch result {
+                case .success(let avatarURL):
+                    
+                    print(avatarURL)
+                case .failure(let failure):
+                    print(failure.localizedDescription)
+                    break
+                }
+            }
+        } else {
+            performSegue(withIdentifier: splashViewIdentifier, sender: nil)
+        }
     }
     
     private func switchToTabBarController() {
@@ -81,10 +81,10 @@ extension SplashViewController {
 }
 
 extension SplashViewController: AuthViewControllerDelegate {
-    func authViewController(_ vc: AuthViewController, didAuthenticateWithCode code: String) {
-        vc.dismiss(animated: true)
-        fetchOAuthToken(code)
-    }
+//    func authViewController(_ vc: AuthViewController, didAuthenticateWithCode code: String) {
+//        vc.dismiss(animated: true)
+//        fetchOAuthToken(code)
+//    }
     
     func didAuthenticate(_ vc: AuthViewController) {
         vc.dismiss(animated: true)
