@@ -69,7 +69,6 @@ final class ProfileImageService {
                     let userData = try decoder.decode(UserResult.self, from: data)
                     let avatarURL = userData.profileImage.small
                     completion(.success(avatarURL))
-                    print(avatarURL)
                     self.avatarURL = avatarURL
                     self.task = nil
                 } catch {

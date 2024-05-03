@@ -101,6 +101,8 @@ extension SplashViewController: AuthViewControllerDelegate {
             case .success(let accessToken):
                 self.storage.token = accessToken
                 self.fetchProfile(token: accessToken)
+                guard let userName = profileService.profile?.userName else {return}
+                self.fetchProfileImageURL(username: userName)
             case .failure(_):
                 break
             }
@@ -114,14 +116,15 @@ extension SplashViewController: AuthViewControllerDelegate {
             guard let self = self else { return }
             switch result {
             case .success(_):
-                self.switchToTabBarController()
-                guard let userName = profileService.profile?.userName else {return}
-                fetchProfileImageURL(username: userName)
-                
-            case .failure(let failure):
-                print(failure.localizedDescription)
-                // TODO [Sprint 11] Покажите ошибку получения профиля
-                break
+                DispatchQueue.main.async{
+                    self.switchToTabBarController()
+                    guard let userName = self.profileService.profile?.userName else {return}
+                    self.fetchProfileImageURL(username: userName)
+                }
+                case .failure(let failure):
+                    print(failure.localizedDescription)
+                    // TODO [Sprint 11] Покажите ошибку получения профиля
+                    break
             }
         }
     }
@@ -129,6 +132,7 @@ extension SplashViewController: AuthViewControllerDelegate {
         profileImageService.fetchProfileImageURL(username: username) { result in
             switch result {
             case .success(let avatarURL):
+               
                 print(avatarURL)
             case .failure(let failure):
                 print(failure.localizedDescription)
