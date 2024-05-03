@@ -23,26 +23,26 @@ final class SplashViewController: UIViewController {
             profileService.fetchProfile(token) { result in
                 switch result {
                 case .success(_):
-                    DispatchQueue.main.async{
+                    DispatchQueue.main.async{ [self] in
                         self.switchToTabBarController()
+                        if let userName = profileService.profile?.userName {
+                            profileImageService.fetchProfileImageURL(username: userName) { result in
+                                switch result {
+                                case .success(let avatarURL):
+                                   
+                                    print(avatarURL)
+                                case .failure(let failure):
+                                    print(failure.localizedDescription)
+                                    break
+                                }
+                            }
+                        } else {
+                            performSegue(withIdentifier: splashViewIdentifier, sender: nil)
+                        }
                     }
                     print(result)
                 case .failure(let failure):
                     print(failure.localizedDescription )
-                    break
-                }
-            }
-        } else {
-            performSegue(withIdentifier: splashViewIdentifier, sender: nil)
-        }
-        if let userName = profileService.profile?.userName {
-            profileImageService.fetchProfileImageURL(username: userName) { result in
-                switch result {
-                case .success(let avatarURL):
-                    
-                    print(avatarURL)
-                case .failure(let failure):
-                    print(failure.localizedDescription)
                     break
                 }
             }
@@ -81,10 +81,10 @@ extension SplashViewController {
 }
 
 extension SplashViewController: AuthViewControllerDelegate {
-//    func authViewController(_ vc: AuthViewController, didAuthenticateWithCode code: String) {
-//        vc.dismiss(animated: true)
-//        fetchOAuthToken(code)
-//    }
+    func authViewController(_ vc: AuthViewController, didAuthenticateWithCode code: String) {
+        vc.dismiss(animated: true)
+        fetchOAuthToken(code)
+    }
     
     func didAuthenticate(_ vc: AuthViewController) {
         vc.dismiss(animated: true)
@@ -127,7 +127,6 @@ extension SplashViewController: AuthViewControllerDelegate {
     }
     private func fetchProfileImageURL(username: String) {
         profileImageService.fetchProfileImageURL(username: username) { result in
-            guard self != nil else {return}
             switch result {
             case .success(let avatarURL):
                 print(avatarURL)

@@ -22,43 +22,27 @@ final class ProfileImageService {
     private (set) var avatarURL: String?
     
     
-//    private func createProfileImageRequest(username: String) -> URLRequest {
-//           guard let baseURL = URL(string: Constants.defaultBaseURL) else {
-//               preconditionFailure("Unable to construct baseUrl")
-//           }
-//           guard let url = URL(
-//               string: "/users/\(username)",
-//               relativeTo: baseURL
-//           ) else {
-//               assertionFailure("Unable to construct url")
-//               return URLRequest(url: URL(string: "")!)
-//           }
-//           guard let token = storage.token else {
-//               assertionFailure("Failed to make token")
-//               return URLRequest(url: URL(string: "")!)
-//           }
-//           var request = URLRequest(url: url)
-//           request.httpMethod = "GET"
-//           request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
-//           print(request)
-//           return request
-//       }
-    
-    private func createProfileImageRequest(username: String) -> URLRequest? {
-//        guard let userName = profileShared.profile?.userName else {return nil}
-        let urlComponents = URLComponents(string: Constants.defaultBaseURL + "/users/:zhuk76787")
-//        urlComponents?.queryItems = [
-//            URLQueryItem(name: "username", value: Constants.userName)]
-        guard let url = urlComponents?.url else {
-            assertionFailure("Failed to create URL")
-            return nil
-        }
-        guard let token = storage.token else {return nil}
-        var request = URLRequest(url: url)
-        request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
-        print(request)
-        return request
-    }
+        private func createProfileImageRequest(username: String) -> URLRequest {
+               guard let baseURL = URL(string: Constants.defaultBaseURL) else {
+                   preconditionFailure("Unable to construct baseUrl")
+               }
+               guard let url = URL(
+                   string: "/users/\(username)",
+                   relativeTo: baseURL
+               ) else {
+                   assertionFailure("Unable to construct url")
+                   return URLRequest(url: URL(string: "")!)
+               }
+               guard let token = storage.token else {
+                   assertionFailure("Failed to make token")
+                   return URLRequest(url: URL(string: "")!)
+               }
+               var request = URLRequest(url: url)
+               request.httpMethod = "GET"
+               request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
+               print(request)
+               return request
+           }
     
     func fetchProfileImageURL(username: String, _ completion: @escaping (Result<String, Error>) -> Void) {
         assert(Thread.isMainThread)
@@ -69,7 +53,7 @@ final class ProfileImageService {
         task?.cancel()
         lastUserName = username
         
-        guard let request = createProfileImageRequest(username: username) else {return}
+       let request = createProfileImageRequest(username: username)
         URLSession.shared.dataTask(with: request) { data, response, error in
             guard let data else {
                 if let error {
@@ -77,8 +61,9 @@ final class ProfileImageService {
                 }
                 return
             }
+            print(data)
             let decoder = JSONDecoder()
-                       decoder.keyDecodingStrategy = .convertFromSnakeCase
+            decoder.keyDecodingStrategy = .convertFromSnakeCase
             DispatchQueue.main.async {
                 do {
                     let userData = try decoder.decode(UserResult.self, from: data)
@@ -97,14 +82,14 @@ final class ProfileImageService {
     }
 }
 
-            
-            
-            
-            
-            
-            
-            
-            
+
+
+
+
+
+
+
+
 //            let decoder = JSONDecoder()
 //            decoder.keyDecodingStrategy = .convertFromSnakeCase
 //            do {
@@ -115,4 +100,4 @@ final class ProfileImageService {
 //                completion(.failure(error))
 //                print(error)
 //            }
-     
+
