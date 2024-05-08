@@ -20,7 +20,7 @@ final class ProfileService {
     private var lastToken: String?
     private var task: URLSessionTask?
     
-    private func createProfileRequest() -> URLRequest? {
+    private func createProfileRequest(token: String) -> URLRequest? {
         let urlComponents = URLComponents(string: Constants.defaultBaseURL + "/me" )
         
         guard let url = urlComponents?.url else {
@@ -40,36 +40,32 @@ final class ProfileService {
             completion(.failure(ProfileServiceError.invalidToken))
             return
         }
-                task?.cancel()
-                lastToken = token
-        guard let request = createProfileRequest() else {
+        task?.cancel()
+        lastToken = token
+        
+        guard let request = createProfileRequest(token: token) else {
             completion(.failure(ProfileServiceError.invalidRequest))
             return
         }
-        URLSession.shared.dataTask(with: request) { data, response, error in
-            guard let data else {
-                if let error {
-                    completion(.failure(error))
-                }
-                return
-            }
-            let decoder = JSONDecoder()
-            decoder.keyDecodingStrategy = .convertFromSnakeCase
+        let session = URLSession.shared
+        let task = session.objectTask(for: request) { [weak self] (result: Result<ProfileResult, Error>) in
+            guard let self = self else { return }
             DispatchQueue.main.async {
-                do {
-                    let profileResult = try decoder.decode(ProfileResult.self, from: data)
-                    let person = Profile(userName: profileResult.username,
-                                         name: profileResult.name,
-                                         loginName: "@\(profileResult.username)",
-                                         bio: profileResult.bio)
-                    completion(.success(person))
-                    self.profile = person
+                switch result {
+                case .success(let profileResult):
+                    let profile = Profile(profileResult: profileResult)
+                    self.profile = profile
+                    print(profile)
+                    completion(.success(profile))
+                    
                     self.task = nil
-                } catch {
+                case .failure(let error):
+                    print("Ошибка получения информации профиля: \(error.localizedDescription)")
                     completion(.failure(error))
                     self.lastToken = nil
                 }
             }
-        }.resume()
+        }
+        task.resume()
     }
 }

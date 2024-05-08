@@ -9,9 +9,11 @@ import Foundation
 
 struct UserResult: Codable {
     let profileImage: Image
-//    enum CodingKeys: String, CodingKey {
-//        case profileImage = "profile_image"
-//    }
+    
+    private enum CodingKeys: String, CodingKey {
+        case profileImage = "profile_image"
+    }
+    
     struct Image: Codable{
         let small: String
     }

@@ -52,35 +52,23 @@ final class OAuth2Service {
             completion(.failure(AuthServiceError.invalidRequest))
             return
         }
-        let task = takeToken(for: request) { [weak self] result in
-            DispatchQueue.main.async {
-                switch result {
-                case .success(let body):
-                    let authToken = body.accessToken
-                    self?.oAuth2TokenStorage.token = authToken
-                    completion(.success(authToken))
-                case .failure(let error):
-                    completion(.failure(error))
-                }
-                self?.task = nil
-                self?.lastCode = nil
+        let task = urlSession.objectTask(for: request) { [weak self] (result: Result<OAuthTokenResponseBody, Error>) in
+            guard let self = self else { return }
+            
+            switch result {
+            case .success(let body):
+                let accessToken = body.accessToken
+                self.oAuth2TokenStorage.token = accessToken
+                print(accessToken)
+                completion(.success(accessToken))
+            case .failure(let error):
+                completion(.failure(error))
             }
+            self.task = nil
+            self.lastCode = nil
         }
         self.task = task
         task.resume()
-    }
-    
-    func takeToken(
-        for request: URLRequest,
-        completion: @escaping (Result<OAuthTokenResponseBody, Error>) -> Void
-    ) -> URLSessionTask {
-        let decoder = JSONDecoder()
-        return URLSession.shared.data(for: request) { result in
-            let response = result.flatMap { data -> Result<OAuthTokenResponseBody, Error> in
-                Result { try decoder.decode(OAuthTokenResponseBody.self, from: data) }
-            }
-            completion(response)
-        }
     }
 }
 

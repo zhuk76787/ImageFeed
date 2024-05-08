@@ -12,4 +12,10 @@ struct Profile {
     let name: String
     let loginName: String
     let bio:String?
+    init(profileResult: ProfileResult) {
+        self.userName = profileResult.userName
+        self.name = "\(profileResult.firstName) \(profileResult.lastName ?? "")"
+        self.loginName = "@\(profileResult.userName)"
+        self.bio = profileResult.bio
+    }
 }
