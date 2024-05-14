@@ -7,8 +7,6 @@
 
 import Foundation
 
-
-
 enum Constants {
     static let accessKey = "IUWwtlkoq30Hemroqdz817cXMaWeMxJZEH1Nk_Wy9pg"
     static let secretKey = "Hkazhu_VURyfKlf5ZRiNHzTeDmAax07-hK_qKFLoxmY"
@@ -16,5 +14,4 @@ enum Constants {
     static let accessScope = "public+read_user+write_likes"
     static let defaultBaseURL = "https://api.unsplash.com"
     static let unsplashAuthorizeURLString = "https://unsplash.com/oauth/authorize"
-    static let userName = "\(String(describing: ProfileService.shared.profile?.userName))"
 }

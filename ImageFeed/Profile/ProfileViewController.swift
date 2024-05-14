@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import Kingfisher
 
 final class ProfileViewController: UIViewController {
     private var imageView = UIImageView()
@@ -39,6 +40,8 @@ final class ProfileViewController: UIViewController {
         let profileImage = UIImage(named: "userPhoto")
         imageView = UIImageView(image: profileImage)
         imageView.tintColor = .gray
+        imageView.layer.cornerRadius = 35
+        imageView.layer.masksToBounds = true
         imageView.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(imageView)
         NSLayoutConstraint.activate([
@@ -120,8 +123,10 @@ final class ProfileViewController: UIViewController {
     private func updateAvatar() {
         guard
             let profileImageURL = profileImageService.avatarURL,
-            let _ = URL(string: profileImageURL)
+            let url = URL(string: profileImageURL)
         else {return}
+        imageView.kf.setImage(with: url,
+                              placeholder: UIImage(named: "placeholder"))
     }
     
 }

@@ -9,15 +9,12 @@ import UIKit
 import WebKit
 
 protocol WebViewViewControllerDelegate: AnyObject {
-    
     func webViewViewController(_ vc: WebViewViewController, didAuthenticateWithCode code: String)
     func webViewViewControllerDidCancel(_ vc: WebViewViewController)
 }
 
 final class WebViewViewController: UIViewController {
-    
     weak var delegate: WebViewViewControllerDelegate?
-    
     @IBOutlet private var webView: WKWebView!
     @IBOutlet private var progressView: UIProgressView!
     
@@ -28,9 +25,10 @@ final class WebViewViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        view.backgroundColor = #colorLiteral(red: 1, green: 0.9999999404, blue: 1, alpha: 1)
         loadAuthView()
         webView.navigationDelegate = self
-        
+        progressView.backgroundColor = #colorLiteral(red: 1, green: 0.9999999404, blue: 1, alpha: 1)
         estimatedProgressObservation = webView.observe(
             \.estimatedProgress,
              options: [],
@@ -38,7 +36,6 @@ final class WebViewViewController: UIViewController {
                  guard let self = self else {return}
                  self.updateProgress()
              })
-        
     }
     
     private func loadAuthView() {
@@ -59,36 +56,6 @@ final class WebViewViewController: UIViewController {
         let request = URLRequest(url: url)
         webView.load(request)
     }
-    
-//    override func viewWillAppear(_ animated: Bool) {
-//        super.viewWillAppear(animated)
-//        webView.addObserver(
-//            self,
-//            forKeyPath: #keyPath(WKWebView.estimatedProgress),
-//            options: .new,
-//            context: nil
-//        )
-//    }
-    
-//    override func viewDidDisappear(_ animated: Bool) {
-//        super.viewDidDisappear(animated)
-//        webView.removeObserver(
-//            self,
-//            forKeyPath: #keyPath(WKWebView.estimatedProgress),
-//            context: nil)
-//    }
-    
-//    override func observeValue(
-//        forKeyPath keyPath: String?,
-//        of object: Any?,
-//        change: [NSKeyValueChangeKey : Any]?,
-//        context: UnsafeMutableRawPointer?) {
-//            if keyPath == #keyPath(WKWebView.estimatedProgress) {
-//                updateProgress()
-//            } else {
-//                super.observeValue(forKeyPath: keyPath, of: object, change: change, context: context)
-//            }
-//        }
     
     private func updateProgress() {
         progressView.progress = Float(webView.estimatedProgress)

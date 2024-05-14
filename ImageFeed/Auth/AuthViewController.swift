@@ -12,7 +12,6 @@ protocol AuthViewControllerDelegate: AnyObject {
 }
 
 final class AuthViewController: UIViewController {
-    
     private let showWebViewSequeIdentifier = "ShowWebView"
     private let oauth2Service = OAuth2Service.shared
     weak var delegate: AuthViewControllerDelegate?
@@ -47,8 +46,8 @@ extension AuthViewController: WebViewViewControllerDelegate {
     
     private func showAlert() {
         let alert = UIAlertController(title: "Что-то пошло не так(",
-                                                message: "Не удалось войти в систему",
-                                                preferredStyle: .alert)
+                                      message: "Не удалось войти в систему",
+                                      preferredStyle: .alert)
         let okAction = UIAlertAction(title: "Ок", style: .default) { _ in
             alert.dismiss(animated: true)
         }

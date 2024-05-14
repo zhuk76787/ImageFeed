@@ -13,7 +13,6 @@ enum ProfileImageServiceError: Error {
 }
 
 final class ProfileImageService {
-    
     private let profileShared = ProfileService.shared
     private var storage = OAuth2TokenStorage()
     static let shared = ProfileImageService(); private init() {}
@@ -21,6 +20,7 @@ final class ProfileImageService {
     private let uRLSession = URLSession.shared
     private var task: URLSessionTask?
     private (set) var avatarURL: String?
+    private (set) var avatarImage: UIImage?
     static let didChangeNotification = Notification.Name(rawValue: "ProfileImageProviderDidChange")
     
     
@@ -67,6 +67,7 @@ final class ProfileImageService {
                                                     userInfo: ["URL": profileImageURL])
                     self.task = nil
                 case .failure(let error):
+                    print("Ошибка получения ссылки на аватарку профиля: \(error.localizedDescription)")
                     completion(.failure(error))
                     self.lastUserName = nil
                 }

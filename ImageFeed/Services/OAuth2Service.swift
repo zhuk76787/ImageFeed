@@ -62,6 +62,7 @@ final class OAuth2Service {
                 print(accessToken)
                 completion(.success(accessToken))
             case .failure(let error):
+                print("Ошибка получения токена: \(error.localizedDescription)")
                 completion(.failure(error))
             }
             self.task = nil
