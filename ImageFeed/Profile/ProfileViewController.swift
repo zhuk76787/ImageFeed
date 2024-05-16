@@ -95,8 +95,10 @@ final class ProfileViewController: UIViewController {
     }
     
     private func buttonConfiguration() {
+        let exitButtonImage = UIImage(named: "Exit")
+        guard let exitButtonImage else {return}
         button = UIButton.systemButton(
-            with: UIImage(named: "Exit")!,
+            with: exitButtonImage ,
             target: self,
             action: #selector(Self.didTapButton)
         )

@@ -8,55 +8,125 @@
 import UIKit
 
 protocol AuthViewControllerDelegate: AnyObject {
-    func didAuthenticate(_ vc: AuthViewController)
+    func authViewController(_ vc: AuthViewController, didAuthenticateWithCode code: String)
 }
 
 final class AuthViewController: UIViewController {
-    private let showWebViewSequeIdentifier = "ShowWebView"
-    private let oauth2Service = OAuth2Service.shared
+    
     weak var delegate: AuthViewControllerDelegate?
     
+    private let showWebViewSegueIdentifier = "ShowWebView"
+    private let buttonView = UIButton()
+    
+    override func viewDidLoad() {
+        setupView()
+        
+        configureBackButton()
+        
+    }
+    
+//    private func goToWeb() {
+//        let storyboard = UIStoryboard(name: "Main", bundle: .main)
+//        
+//        guard let viewController: UINavigationController = storyboard.instantiateViewController(withIdentifier: "NavigationController") as? UINavigationController,
+//              let webViewController = viewController.viewControllers[0] as? WebViewViewController else {
+//            assertionFailure("Failed to prepare for \(showWebViewSegueIdentifier)")
+//            return
+//        }
+//        webViewController.delegate = self
+//        viewController.modalPresentationStyle = .fullScreen
+//        present(viewController, animated: true)
+//    }
+    
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        if segue.identifier == showWebViewSequeIdentifier {
+        if segue.identifier == showWebViewSegueIdentifier {
             guard
                 let webViewViewController = segue.destination as? WebViewViewController
-            else { return assertionFailure("Failed to prepare for \(showWebViewSequeIdentifier)") }
+            else { fatalError("Failed to prepare for \(showWebViewSegueIdentifier)") }
             webViewViewController.delegate = self
         } else {
             super.prepare(for: segue, sender: sender)
         }
     }
+    
+    @objc
+    private func didTapLogonButton() {
+        performSegue(withIdentifier: showWebViewSegueIdentifier, sender: Any?.self)
+    }
 }
 
 extension AuthViewController: WebViewViewControllerDelegate {
     func webViewViewController(_ vc: WebViewViewController, didAuthenticateWithCode code: String) {
-        vc.dismiss(animated: true)
-        UIBlockingProgressHUD.show()
-        oauth2Service.fetchOAuthToken(code: code) { [self] result in
-            UIBlockingProgressHUD.dismiss()
-            switch result{
-            case .success:
-                delegate?.didAuthenticate(self)
-            case .failure:
-                showAlert()
-                break
-            }
-        }
-    }
-    
-    private func showAlert() {
-        let alert = UIAlertController(title: "Что-то пошло не так(",
-                                      message: "Не удалось войти в систему",
-                                      preferredStyle: .alert)
-        let okAction = UIAlertAction(title: "Ок", style: .default) { _ in
-            alert.dismiss(animated: true)
-        }
-        alert.addAction(okAction)
-        present(alert, animated: true)
+        delegate?.authViewController(self, didAuthenticateWithCode: code)
     }
     
     func webViewViewControllerDidCancel(_ vc: WebViewViewController) {
         dismiss(animated: true)
+    }
+    
+    func showAlert(_ vc: UIViewController)  {
+        let alert = UIAlertController(
+            title: "Что-то пошло не так(",
+            message: "Не удалось войти в систему",
+            preferredStyle: .alert
+        )
+        alert.view.accessibilityIdentifier = "alertId"
+        
+        let action = UIAlertAction(title: "Ok", style: .default) { _ in
+            alert.dismiss(animated: true)
+        }
+        
+        alert.addAction(action)
+        vc.present(alert, animated: true, completion: nil)
+    }
+}
+
+extension AuthViewController {
+    private func setupView() {
+        view.backgroundColor = #colorLiteral(red: 0.1352768838, green: 0.1420838535, blue: 0.1778985262, alpha: 1)
+        setupLogo()
+        setupLogonButton()
+    }
+    
+    private func setupLogo() {
+        let logoImage = UIImage(named: "Logo_of_Unsplash")
+        let imageView = UIImageView(image: logoImage)
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(imageView)
+        
+        NSLayoutConstraint.activate([
+            imageView.widthAnchor.constraint(equalToConstant: 60),
+            imageView.heightAnchor.constraint(equalToConstant: 60),
+            imageView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            imageView.centerYAnchor.constraint(equalTo: view.centerYAnchor)
+        ])
+    }
+    
+    private func setupLogonButton() {
+        buttonView.addTarget(self, action: #selector(self.didTapLogonButton), for: .touchUpInside)
+        buttonView.setTitle("Войти", for: .normal)
+        buttonView.titleLabel?.font = UIFont.systemFont(ofSize: 17, weight: .bold)
+        buttonView.setTitleColor(#colorLiteral(red: 0.1352768838, green: 0.1420838535, blue: 0.1778985262, alpha: 1), for: .normal)
+        buttonView.backgroundColor = #colorLiteral(red: 1, green: 0.9999999404, blue: 1, alpha: 1)
+        buttonView.layer.cornerRadius = 16
+        buttonView.layer.masksToBounds = true
+        buttonView.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(buttonView)
+        
+        NSLayoutConstraint.activate([
+            buttonView.heightAnchor.constraint(equalToConstant: 48),
+            buttonView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            buttonView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -90),
+            buttonView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
+            buttonView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
+        ])
+    }
+    
+    private func configureBackButton() {
+        navigationController?.navigationBar.backIndicatorImage = UIImage(named: "nav_back_button")
+        navigationController?.navigationBar.backIndicatorTransitionMaskImage = UIImage(named: "nav_back_button")
+        navigationItem.backBarButtonItem = UIBarButtonItem(title: "", style: .plain, target: nil, action: nil)
+        navigationItem.backBarButtonItem?.tintColor = #colorLiteral(red: 0.1352768838, green: 0.1420838535, blue: 0.1778985262, alpha: 1)
     }
 }
 
