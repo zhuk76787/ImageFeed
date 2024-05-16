@@ -8,9 +8,10 @@
 import Foundation
 
 enum NetworkError: Error {
-    case httpStatusCode(Int)
-    case urlRequestError(Error)
+    case httpStatusCode (Int)
+    case urlRequestError (Error)
     case urlSessionError
+    case decoderError (Error)
 }
 
 extension URLSession {
@@ -20,27 +21,25 @@ extension URLSession {
                 completion(result)
             }
         }
+        let decoder = JSONDecoder()
         let task = dataTask(with: request, completionHandler: { data, response, error in
-            if let data = data,
-               let response = response,
-               let statusCode = (response as? HTTPURLResponse)?.statusCode {
-                
-                if 200..<300 ~= statusCode {
-                    let decoder = JSONDecoder()
-                    do {
-                        let result = try decoder.decode(T.self, from: data)
-                        fulfillCompletionOnTheMainThread(.success(result))
+            if let data = data, let response = response, let statusCode = (response as? HTTPURLResponse)?.statusCode {
+                if 200 ..< 300 ~= statusCode {
+                    do { let decodedData = try decoder.decode(T.self, from: data)
+                        fulfillCompletionOnTheMainThread(.success(decodedData))
                     } catch {
-                        print("Ошибка декодирования: \(error.localizedDescription), Данные: \(String(data: data, encoding: .utf8) ?? "")")
-                        completion(.failure(error))
+                        print("\(String(describing: T.self)) [dataTask:] - Error of decoding: \(error.localizedDescription), Data: \(String(data: data, encoding: .utf8) ?? "")")
+                        fulfillCompletionOnTheMainThread(.failure(NetworkError.decoderError(error)))
                     }
                 } else {
+                    print("\(String(describing: T.self)) [dataTask:] - Network Error \(statusCode)" )
                     fulfillCompletionOnTheMainThread(.failure(NetworkError.httpStatusCode(statusCode)))
+                    return
                 }
             } else if let error = error {
+                print("\(String(describing: T.self)) [URLRequest:] - \(error.localizedDescription)")
                 fulfillCompletionOnTheMainThread(.failure(NetworkError.urlRequestError(error)))
-            } else {
-                fulfillCompletionOnTheMainThread(.failure(NetworkError.urlSessionError))
+                return
             }
         })
         

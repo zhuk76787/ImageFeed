@@ -105,8 +105,7 @@ extension SplashViewController: AuthViewControllerDelegate {
                 self.fetchProfileImageURL(userName: userName)
                 self.switchToTabBarController()
             case .failure(let failure):
-                print(failure.localizedDescription)
-                // TODO [Sprint 11] Покажите ошибку получения профиля
+                print("[SplashViewController]: \(failure.localizedDescription)")
                 break
             }
         }
@@ -118,7 +117,7 @@ extension SplashViewController: AuthViewControllerDelegate {
             case .success(let avatarURL):
                 print(avatarURL)
             case .failure(let failure):
-                print(failure.localizedDescription)
+                print("[SplashViewController]: \(failure.localizedDescription)")
                 break
             }
         }

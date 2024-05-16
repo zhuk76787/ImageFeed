@@ -25,19 +25,6 @@ final class AuthViewController: UIViewController {
         
     }
     
-//    private func goToWeb() {
-//        let storyboard = UIStoryboard(name: "Main", bundle: .main)
-//        
-//        guard let viewController: UINavigationController = storyboard.instantiateViewController(withIdentifier: "NavigationController") as? UINavigationController,
-//              let webViewController = viewController.viewControllers[0] as? WebViewViewController else {
-//            assertionFailure("Failed to prepare for \(showWebViewSegueIdentifier)")
-//            return
-//        }
-//        webViewController.delegate = self
-//        viewController.modalPresentationStyle = .fullScreen
-//        present(viewController, animated: true)
-//    }
-    
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == showWebViewSegueIdentifier {
             guard
@@ -97,8 +84,8 @@ extension AuthViewController {
         NSLayoutConstraint.activate([
             imageView.widthAnchor.constraint(equalToConstant: 60),
             imageView.heightAnchor.constraint(equalToConstant: 60),
-            imageView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            imageView.centerYAnchor.constraint(equalTo: view.centerYAnchor)
+            imageView.centerXAnchor.constraint(equalTo: view.safeAreaLayoutGuide.centerXAnchor),
+            imageView.centerYAnchor.constraint(equalTo: view.safeAreaLayoutGuide.centerYAnchor)
         ])
     }
     
