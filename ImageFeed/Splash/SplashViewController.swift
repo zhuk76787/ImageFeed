@@ -81,7 +81,7 @@ extension SplashViewController: AuthViewControllerDelegate {
                 self.oAuth2TokenStorage.token = accessToken
                 self.didAuthenticate()
             case .failure(let error):
-                authViewController?.showAlert(vc)
+                self.authViewController?.showAlert(vc)
                 print("[SplashViewController]: \(error)")
                 break
             }
@@ -102,7 +102,7 @@ extension SplashViewController: AuthViewControllerDelegate {
             switch result {
             case .success(_):
                 guard let userName = self.profileService.profile?.userName else {return}
-                self.fetchProfileImageURL(userName: userName)
+                self.fetchImageProfile(token: token, username: userName)
                 self.switchToTabBarController()
             case .failure(let failure):
                 print("[SplashViewController]: \(failure.localizedDescription)")
@@ -111,14 +111,15 @@ extension SplashViewController: AuthViewControllerDelegate {
         }
     }
     
-    private func fetchProfileImageURL(userName: String) {
-        profileImageService.fetchProfileImageURL(userName: userName) { result in
+    func fetchImageProfile(token: String, username: String) {
+        profileImageService.fetchProfileImageURL(token: token, username: username) { [weak self] result in
+            guard let self = self else { return }
             switch result {
-            case .success(let avatarURL):
-                print(avatarURL)
-            case .failure(let failure):
-                print("[SplashViewController]: \(failure.localizedDescription)")
-                break
+            case .success(let imageData):
+                profileImageService.profileImageURL = imageData.profileImage.small
+                switchToTabBarController()
+            case .failure(let error):
+                print(error.localizedDescription)
             }
         }
     }
