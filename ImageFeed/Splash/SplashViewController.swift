@@ -13,6 +13,7 @@ final class SplashViewController: UIViewController {
     private let oAuth2TokenStorage = OAuth2TokenStorage()
     private let profileService = ProfileService.shared
     private let profileImageService = ProfileImageService.shared
+    private let alert = AlertPresentor.shared
     private let imageView = UIImageView()
     
     weak var authViewController: AuthViewController?
@@ -81,7 +82,7 @@ extension SplashViewController: AuthViewControllerDelegate {
                 self.oAuth2TokenStorage.token = accessToken
                 self.didAuthenticate()
             case .failure(let error):
-                self.authViewController?.showAlert(vc)
+                alert.showNetworkError(with: error)
                 print("[SplashViewController]: \(error)")
                 break
             }
