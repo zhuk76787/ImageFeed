@@ -50,22 +50,6 @@ extension AuthViewController: WebViewViewControllerDelegate {
     func webViewViewControllerDidCancel(_ vc: WebViewViewController) {
         dismiss(animated: true)
     }
-    
-    func showAlert(_ vc: UIViewController)  {
-        let alert = UIAlertController(
-            title: "Что-то пошло не так(",
-            message: "Не удалось войти в систему",
-            preferredStyle: .alert
-        )
-        alert.view.accessibilityIdentifier = "alertId"
-        
-        let action = UIAlertAction(title: "Ok", style: .default) { _ in
-            alert.dismiss(animated: true)
-        }
-        
-        alert.addAction(action)
-        vc.present(alert, animated: true, completion: nil)
-    }
 }
 
 extension AuthViewController {
