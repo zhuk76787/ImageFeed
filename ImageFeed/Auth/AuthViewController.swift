@@ -25,21 +25,15 @@ final class AuthViewController: UIViewController {
         
     }
     
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        if segue.identifier == showWebViewSegueIdentifier {
-            guard
-                let webViewViewController = segue.destination as? WebViewViewController
-            else { fatalError("Failed to prepare for \(showWebViewSegueIdentifier)") }
-            webViewViewController.delegate = self
-        } else {
-            super.prepare(for: segue, sender: sender)
-        }
+    @objc
+    private func didTapLogonButton() {
+        segueToWebView()
     }
     
     @objc
-    private func didTapLogonButton() {
-        performSegue(withIdentifier: showWebViewSegueIdentifier, sender: Any?.self)
-    }
+        private func didTapBackButton() {
+            dismiss(animated: true, completion: nil)
+        }
 }
 
 extension AuthViewController: WebViewViewControllerDelegate {
@@ -48,7 +42,7 @@ extension AuthViewController: WebViewViewControllerDelegate {
     }
     
     func webViewViewControllerDidCancel(_ vc: WebViewViewController) {
-        dismiss(animated: true)
+        dismiss(animated: true, completion: nil)
     }
 }
 
@@ -96,8 +90,18 @@ extension AuthViewController {
     private func configureBackButton() {
         navigationController?.navigationBar.backIndicatorImage = UIImage(named: "nav_back_button")
         navigationController?.navigationBar.backIndicatorTransitionMaskImage = UIImage(named: "nav_back_button")
-        navigationItem.backBarButtonItem = UIBarButtonItem(title: "", style: .plain, target: nil, action: nil)
+        navigationItem.backBarButtonItem = UIBarButtonItem(title: "", 
+                                                           style: .plain,
+                                                           target: nil,
+                                                           action: nil)
         navigationItem.backBarButtonItem?.tintColor = #colorLiteral(red: 0.1352768838, green: 0.1420838535, blue: 0.1778985262, alpha: 1)
     }
+    
+    func segueToWebView() {
+            let webViewVewController = WebViewViewController()
+            webViewVewController.delegate = self
+            webViewVewController.modalPresentationStyle = .fullScreen
+            self.present(webViewVewController, animated: true, completion: nil)
+        }
 }
 

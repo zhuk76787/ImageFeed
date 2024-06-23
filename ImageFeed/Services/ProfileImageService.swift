@@ -1,59 +1,70 @@
-//
-//  ProfileImageService.swift
-//  ImageFeed
-//
-//  Created by Дмитрий Жуков on 4/30/24.
-//
 
 import UIKit
 
 final class ProfileImageService {
-    private enum GetUserImageDataError: Error {
-        case invalidProfileImageRequest
-    }
     
-    static let shared = ProfileImageService()
+    // MARK: - Properties
+    
+    static var shared = ProfileImageService()
+    private let urlSession = URLSession.shared
+    private let storage = OAuth2TokenStorage()
+    private(set) var avatarURL: String?
+    private var task: URLSessionTask?
+    private var lastUserName: String?
     static let didChangeNotification = Notification.Name(rawValue: "ProfileImageProviderDidChange")
     
-    var profileImageURL: String?
-    
-    private var mainUrlProfile = "https://api.unsplash.com/users/"
-    private var task: URLSessionTask?
+    // MARK: - init
     
     private init() {}
     
-    private func makeProfileImageRequest(token: String, username: String) -> URLRequest? {
-        let imageUrlString = mainUrlProfile + username
-        guard let url = URL(string: imageUrlString) else {
-            preconditionFailure("Error: unable to construct profileImageURL")
+    // MARK: - Function
+    
+    private func makeProfileImageRequest(username: String) -> URLRequest {
+        guard let defaultBaseURL = URL(string: Constants.defaultBaseURL) else {
+            preconditionFailure("Unable to construct baseUrl")
+        }
+        var urlComponents = URLComponents()
+        urlComponents.path = "/users/\(username)"
+        guard let url = urlComponents.url(relativeTo: defaultBaseURL)
+         else {
+            assertionFailure("Unable to construct avatar url")
+            return URLRequest(url: URL(string: "")!)
+        }
+        guard let token = storage.token else {
+            assertionFailure("Failed to make token")
+            return URLRequest(url: URL(string: "")!)
         }
         var request = URLRequest(url: url)
-        request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
         request.httpMethod = "GET"
+        request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
+        print(request)
         return request
     }
     
-    func fetchProfileImageURL(token: String, username: String, _ completion: @escaping (Result<UserResult, Error>) -> Void) {
+    func fetchProfileImageURL(username: String, _ completion: @escaping (Result<String, Error>) -> Void) {
         
-        guard task == nil else { return }
+        assert(Thread.isMainThread)
+        if lastUserName == username { return }
+        task?.cancel()
+        lastUserName = username
         
-        guard let requestWithTokenAndUsername = makeProfileImageRequest(token: token, username: username)  else {
-            completion(.failure(GetUserImageDataError.invalidProfileImageRequest))
-            return
-        }
-        
-        let task = URLSession.shared.objectTask(for: requestWithTokenAndUsername) { (result: Result<UserResult,Error>) in
+        let requestProfileImage = makeProfileImageRequest(username: username)
+        let task = urlSession.objectTask(for: requestProfileImage) { [weak self] (result: Result<UserResult, Error>) in
+            guard let self = self else { return }
+
             DispatchQueue.main.async {
                 switch result {
-                case .success(let decodedData):
-                    completion(.success(decodedData))
-                    NotificationCenter.default
-                        .post(name: ProfileImageService.didChangeNotification,
-                              object: self,
-                              userInfo: ["URL": decodedData])
+                case.success(let profileImageURL):
+                    let avatarURL = profileImageURL.profileImage.small
+                    self.avatarURL = avatarURL
+                    completion(.success(avatarURL))
+                    NotificationCenter.default.post(name: ProfileImageService.didChangeNotification,
+                                                    object: self,
+                                                    userInfo: ["URL": profileImageURL])
+                    self.task = nil
                 case .failure(let error):
                     completion(.failure(error))
-                    print("[ProfileImageService]: \(error)")
+                    self.lastUserName = nil
                 }
             }
         }
@@ -61,5 +72,3 @@ final class ProfileImageService {
         task.resume()
     }
 }
-
-

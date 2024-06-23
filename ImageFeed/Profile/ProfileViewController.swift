@@ -124,7 +124,7 @@ final class ProfileViewController: UIViewController {
     
     private func updateAvatar() {
         guard
-            let profileImageURL = profileImageService.profileImageURL,
+            let profileImageURL = profileImageService.avatarURL,
             let url = URL(string: profileImageURL)
         else {return}
         imageView.kf.setImage(with: url,

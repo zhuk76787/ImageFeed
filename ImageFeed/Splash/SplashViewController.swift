@@ -56,17 +56,11 @@ extension SplashViewController {
 }
 
 extension SplashViewController {
-    private func goToAuth() {
-        let storyboard = UIStoryboard(name: "Main", bundle: .main)
-        
-        guard let viewController: UINavigationController = storyboard.instantiateViewController(withIdentifier: "NavigationController") as? UINavigationController,
-              let authViewController = viewController.viewControllers[0] as? AuthViewController else {
-            assertionFailure("Failed to prepare for \(showAuthenticationScreenSegueIdentifier)")
-            return
-        }
+    func goToAuth() {
+        let authViewController = AuthViewController()
         authViewController.delegate = self
-        viewController.modalPresentationStyle = .fullScreen
-        present(viewController, animated: true)
+        authViewController.modalPresentationStyle = .fullScreen
+        self.present(authViewController, animated: true, completion: nil)
     }
 }
 
@@ -97,33 +91,27 @@ extension SplashViewController: AuthViewControllerDelegate {
         fetchProfile(token: token)
     }
     
-    func fetchProfile(token: String) {
-        profileService.fetchProfile(token) { [weak self] result in
-            guard let self = self else { return }
-            switch result {
-            case .success(_):
-                guard let userName = self.profileService.profile?.userName else {return}
-                self.fetchImageProfile(token: token, username: userName)
-                self.switchToTabBarController()
-            case .failure(let failure):
-                print("[SplashViewController]: \(failure.localizedDescription)")
-                break
-            }
-        }
-    }
-    
-    func fetchImageProfile(token: String, username: String) {
-        profileImageService.fetchProfileImageURL(token: token, username: username) { [weak self] result in
-            guard let self = self else { return }
-            switch result {
-            case .success(let imageData):
-                profileImageService.profileImageURL = imageData.profileImage.small
-                switchToTabBarController()
-            case .failure(let error):
-                print(error.localizedDescription)
-            }
-        }
-    }
+    private func fetchProfile(token: String) {
+           profileService.fetchProfile(token) { [weak self] result in
+               guard let self = self else { return }
+               switch result {
+               case .success(let profile):
+                   self.profileImageService.fetchProfileImageURL(username: profile.userName) { result in
+                       switch result {
+                       case .success(let avatarURL):
+                           print(avatarURL)
+                       case .failure(let failure):
+                           print(failure.localizedDescription)
+                           break
+                       }
+                   }
+                   self.switchToTabBarController()
+               case .failure(let failure):
+                   print(failure.localizedDescription)
+                   break
+               }
+           }
+       }
 }
 
 extension SplashViewController {

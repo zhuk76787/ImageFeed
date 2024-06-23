@@ -3,7 +3,7 @@
     <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="22684"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="22685"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -20,9 +20,6 @@
                         <color key="backgroundColor" red="0.10196078431372549" green="0.10588235294117647" blue="0.13333333333333333" alpha="1" colorSpace="calibratedRGB"/>
                     </view>
                     <navigationItem key="navigationItem" id="gDx-rC-5DX"/>
-                    <connections>
-                        <segue destination="OIt-Ri-HxU" kind="show" identifier="ShowWebView" id="RqV-US-z6H"/>
-                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="hts-qZ-ibc" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
@@ -35,38 +32,9 @@
                     <view key="view" contentMode="scaleToFill" id="fkb-ai-8W9">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <subviews>
-                            <wkWebView contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="q9n-AP-eQ5">
-                                <rect key="frame" x="0.0" y="70" width="414" height="826"/>
-                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                <wkWebViewConfiguration key="configuration">
-                                    <audiovisualMediaTypes key="mediaTypesRequiringUserActionForPlayback" none="YES"/>
-                                    <wkPreferences key="preferences"/>
-                                </wkWebViewConfiguration>
-                            </wkWebView>
-                            <progressView opaque="NO" contentMode="scaleToFill" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="0Wm-Ih-mIk">
-                                <rect key="frame" x="0.0" y="92" width="414" height="4"/>
-                                <color key="backgroundColor" systemColor="systemBackgroundColor"/>
-                                <color key="tintColor" red="0.10196078431372549" green="0.10588235294117647" blue="0.13333333333333333" alpha="0.89803921568627454" colorSpace="calibratedRGB"/>
-                            </progressView>
-                        </subviews>
                         <viewLayoutGuide key="safeArea" id="7A3-bg-0rG"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
-                        <constraints>
-                            <constraint firstItem="7A3-bg-0rG" firstAttribute="trailing" secondItem="0Wm-Ih-mIk" secondAttribute="trailing" id="6iD-en-SlK"/>
-                            <constraint firstItem="q9n-AP-eQ5" firstAttribute="leading" secondItem="fkb-ai-8W9" secondAttribute="leading" id="72s-pb-sWc"/>
-                            <constraint firstAttribute="bottom" secondItem="q9n-AP-eQ5" secondAttribute="bottom" id="9xX-Wm-cH1"/>
-                            <constraint firstItem="q9n-AP-eQ5" firstAttribute="top" secondItem="fkb-ai-8W9" secondAttribute="topMargin" constant="-22" id="DvY-QG-kdM"/>
-                            <constraint firstAttribute="trailing" secondItem="q9n-AP-eQ5" secondAttribute="trailing" id="HiG-Z3-tEp"/>
-                            <constraint firstItem="0Wm-Ih-mIk" firstAttribute="leading" secondItem="7A3-bg-0rG" secondAttribute="leading" id="g9P-op-uAn"/>
-                            <constraint firstItem="0Wm-Ih-mIk" firstAttribute="top" secondItem="7A3-bg-0rG" secondAttribute="top" id="r1k-5J-WQc"/>
-                        </constraints>
                     </view>
-                    <navigationItem key="navigationItem" id="oXT-Lh-6Qb"/>
-                    <connections>
-                        <outlet property="progressView" destination="0Wm-Ih-mIk" id="ZU0-ew-O91"/>
-                        <outlet property="webView" destination="q9n-AP-eQ5" id="YZK-oY-e6T"/>
-                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="hcj-CD-elf" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
