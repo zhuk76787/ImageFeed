@@ -76,7 +76,7 @@ extension SplashViewController: AuthViewControllerDelegate {
                 self.oAuth2TokenStorage.token = accessToken
                 self.didAuthenticate()
             case .failure(let error):
-                alert.showNetworkError(with: error)
+                alert.showNetworkError()
                 print("[SplashViewController]: \(error)")
                 break
             }

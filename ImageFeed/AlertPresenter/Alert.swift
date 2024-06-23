@@ -11,7 +11,7 @@ class AlertPresentor: UIViewController {
     
     static let shared = AlertPresentor()
     
-    func showNetworkError(with: Error) {
+    func showNetworkError() {
         let alert = UIAlertController(
             title: "Что-то пошло не так(",
             message: "Не удалось войти в систему",
@@ -22,8 +22,10 @@ class AlertPresentor: UIViewController {
                 alert.dismiss(animated: true)
             }
         alert.addAction(action)
-        present(alert, animated: true, completion: nil)
-
+        UIApplication.shared.windows.filter{$0.isKeyWindow}
+            .first?
+            .rootViewController?
+            .presentedViewController?
+            .present(alert, animated: true, completion: nil)
     }
-
 }
