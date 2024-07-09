@@ -16,7 +16,9 @@ final class ProfileViewController: UIViewController {
     private var button = UIButton()
     private let profileService = ProfileService.shared
     private let profileImageService = ProfileImageService.shared
+    private let profileLogoutService = ProfileLogoutService.shared
     private var profileImageServiceObserver: NSObjectProtocol?
+    
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -115,11 +117,7 @@ final class ProfileViewController: UIViewController {
     
     @objc
     private func didTapButton() {
-        for view in view.subviews {
-            if view is UILabel {
-                view.removeFromSuperview()
-            }
-        }
+        showLogoutAlert()
     }
     
     private func updateAvatar() {
@@ -131,4 +129,38 @@ final class ProfileViewController: UIViewController {
                               placeholder: UIImage(named: "placeholder"))
     }
     
+}
+
+extension ProfileViewController {
+    private func showLogoutAlert() {
+        let alert = UIAlertController(
+            title: "Пока, пока!",
+            message: "Уверены что хотите выйти?",
+            preferredStyle: .alert
+        )
+        
+        let yesAction = UIAlertAction(
+            title: "Да",
+            style: .default) { _ in
+                alert.dismiss(animated: true)
+                self.profileLogoutService.logout()
+                
+                guard let window = UIApplication.shared.windows.first else {
+                    assertionFailure("confirmExit Invalid Configuration")
+                    return
+                }
+                window.rootViewController = SplashViewController()
+            }
+        
+        let noAction = UIAlertAction(
+            title: "Нет",
+            style: .default) { _ in
+                alert.dismiss(animated: true)
+            }
+        
+        alert.addAction(yesAction)
+        alert.addAction(noAction)
+        
+        present(alert, animated: true)
+    }
 }

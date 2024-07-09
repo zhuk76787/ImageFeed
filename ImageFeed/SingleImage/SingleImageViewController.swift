@@ -5,19 +5,22 @@
 //  Created by Дмитрий Жуков on 3/17/24.
 //
 
+import Kingfisher
 import UIKit
 
 final class SingleImageViewController: UIViewController {
+    
+    private var imageURL: String?
     
     override var preferredStatusBarStyle: UIStatusBarStyle{
         return .lightContent
     }
     
-    var image: UIImage! {
+    var image: UIImage? {
         didSet {
             guard isViewLoaded else { return }
-            singleImage.image = image
             if let image = image {
+                singleImage.image = image
                 imageInScrollView(image: image)
             }
         }
@@ -28,10 +31,19 @@ final class SingleImageViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        //        setImage()
+        setupGestureRecognizer()
         scrollView.delegate = self
         singleImage.image = image
-        imageInScrollView(image: image)
+        if let image = image {
+            imageInScrollView(image: image)
+        }
         scrollView.zoomScale = scrollView.minimumZoomScale
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        setImage()
     }
     
     @IBAction private func didTapBackButton() {
@@ -39,11 +51,31 @@ final class SingleImageViewController: UIViewController {
     }
     
     @IBAction func didTapShareButton(_ sender: UIButton) {
-        let share = UIActivityViewController(
-            activityItems: [image as Any],
-            applicationActivities: nil
+        guard let image = singleImage.image else { return }
+        let share = UIActivityViewController(activityItems: [image],
+                                             applicationActivities: nil
         )
         present(share, animated: true, completion: nil)
+    }
+    
+    private func setupGestureRecognizer() {
+        let doubleTapRecognizer = UITapGestureRecognizer(target: self, action: #selector(handleDoubleTap(_:)))
+        doubleTapRecognizer.numberOfTapsRequired = 2
+        scrollView.addGestureRecognizer(doubleTapRecognizer)
+    }
+    
+    @objc private func handleDoubleTap(_ recognizer: UITapGestureRecognizer) {
+        let pointInView = recognizer.location(in: singleImage)
+        let newZoomScale = scrollView.zoomScale == scrollView.minimumZoomScale ? scrollView.maximumZoomScale : scrollView.minimumZoomScale
+        let scrollViewSize = scrollView.bounds.size
+        
+        let width = scrollViewSize.width / newZoomScale
+        let height = scrollViewSize.height / newZoomScale
+        let originX = pointInView.x - (width / 2.0)
+        let originY = pointInView.y - (height / 2.0)
+        
+        let rectToZoomTo = CGRect(x: originX, y: originY, width: width, height: height)
+        scrollView.zoom(to: rectToZoomTo, animated: true)
     }
     
     private func imageInScrollView(image: UIImage) {
@@ -93,3 +125,35 @@ extension SingleImageViewController: UIScrollViewDelegate {
     }
 }
 
+extension SingleImageViewController {
+    func setImageURL(imageURL: String) {
+        self.imageURL = imageURL
+    }
+    
+    func setImage() {
+        guard let imageURL = imageURL, let url = URL(string: imageURL) else {
+            print("[SingleImageViewController]: error of creating URL")
+            return
+        }
+        
+        UIBlockingProgressHUD.show()
+        singleImage.kf.indicatorType = .activity
+        singleImage.kf.setImage(with: url) { [weak self] result in
+            UIBlockingProgressHUD.dismiss()
+            guard let self = self else { return }
+            switch result {
+            case .success(let result):
+                print("Success")
+                self.imageInScrollView(image: result.image)
+            case .failure(let error):
+                print("[SingleImageViewController]: Kingfisher error: \(error)")
+                
+                if let stub = UIImage(named: "stub") {
+                    self.singleImage.image = stub
+                    self.imageInScrollView(image: stub)
+                }
+                //self.showError()
+            }
+        }
+    }
+}

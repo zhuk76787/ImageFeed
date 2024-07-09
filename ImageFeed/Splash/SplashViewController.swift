@@ -92,26 +92,26 @@ extension SplashViewController: AuthViewControllerDelegate {
     }
     
     private func fetchProfile(token: String) {
-           profileService.fetchProfile(token) { [weak self] result in
-               guard let self = self else { return }
-               switch result {
-               case .success(let profile):
-                   self.profileImageService.fetchProfileImageURL(username: profile.userName) { result in
-                       switch result {
-                       case .success(let avatarURL):
-                           print(avatarURL)
-                       case .failure(let failure):
-                           print(failure.localizedDescription)
-                           break
-                       }
-                   }
-                   self.switchToTabBarController()
-               case .failure(let failure):
-                   print(failure.localizedDescription)
-                   break
-               }
-           }
-       }
+        profileService.fetchProfile(token) { [weak self] result in
+            guard let self = self else { return }
+            switch result {
+            case .success(let profile):
+                self.profileImageService.fetchProfileImageURL(username: profile.userName) { result in
+                    switch result {
+                    case .success(let avatarURL):
+                        print(avatarURL)
+                    case .failure(let failure):
+                        print(failure.localizedDescription)
+                        break
+                    }
+                }
+                self.switchToTabBarController()
+            case .failure(let failure):
+                print(failure.localizedDescription)
+                break
+            }
+        }
+    }
 }
 
 extension SplashViewController {
