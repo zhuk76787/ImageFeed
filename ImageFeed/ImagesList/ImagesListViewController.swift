@@ -161,11 +161,10 @@ extension ImagesListViewController: ImagesListCellDelegate {
             case .success:
                 self.photos = self.imagesListService.photos
                 cell.setImageLike(isLiked: self.photos[indexPath.row].isLiked)
-                UIBlockingProgressHUD.dismiss()
             case .failure:
-                UIBlockingProgressHUD.dismiss()
                 print("[ImagesListViewController]: ImagesListCellDelegate error: \(result)")
             }
+            UIBlockingProgressHUD.dismiss()
         }
     }
 }

@@ -141,7 +141,7 @@ extension ProfileViewController {
         
         let yesAction = UIAlertAction(
             title: "Да",
-            style: .default) { _ in
+            style: .default) { _ in 
                 alert.dismiss(animated: true)
                 self.profileLogoutService.logout()
                 

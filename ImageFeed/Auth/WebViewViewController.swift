@@ -14,13 +14,18 @@ protocol WebViewViewControllerDelegate: AnyObject {
     func webViewViewControllerDidCancel(_ vc: WebViewViewController)
 }
 
-final class WebViewViewController: UIViewController {
+public protocol WebViewViewControllerProtocol: AnyObject {
+    var presenter: WebViewPresenterProtocol? { get set }
+   }
+
+final class WebViewViewController: UIViewController & WebViewViewControllerProtocol {
     private var webView = WKWebView()
     private var progressView = UIProgressView()
     
     private var estimatedProgressObservation: NSKeyValueObservation?
     
     weak var delegate: WebViewViewControllerDelegate?
+    var presenter: WebViewPresenterProtocol?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -41,14 +46,6 @@ final class WebViewViewController: UIViewController {
     
     @IBAction private func didTapBackButton(_ sender: Any?) {
         delegate?.webViewViewControllerDidCancel(self)
-    }
-    
-    override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
-    }
-    
-    override func viewWillDisappear(_ animated: Bool) {
-        super.viewWillDisappear(animated)
     }
     
     private func updateProgress() {
