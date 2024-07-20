@@ -37,13 +37,21 @@ final class AuthViewController: UIViewController {
 }
 
 extension AuthViewController: WebViewViewControllerDelegate {
+    func segueToWebView() {
+            let webViewVewController = WebViewViewController()
+            webViewVewController.delegate = self
+            webViewVewController.modalPresentationStyle = .fullScreen
+        let presenter = WebViewPresenter()
+        webViewVewController.presenter = presenter
+        self.present(webViewVewController, animated: true, completion: nil)
+        
+        }
     func webViewViewController(_ vc: WebViewViewController, didAuthenticateWithCode code: String) {
-        delegate?.authViewController(self, didAuthenticateWithCode: code)
-    }
-    
-    func webViewViewControllerDidCancel(_ vc: WebViewViewController) {
-        dismiss(animated: true, completion: nil)
-    }
+        delegate?.authViewController(self, didAuthenticateWithCode: code)       }
+       
+       func webViewViewControllerDidCancel(_ vc: WebViewViewController) {
+           vc.dismiss(animated: true, completion: nil)
+       }
 }
 
 extension AuthViewController {
@@ -96,12 +104,5 @@ extension AuthViewController {
                                                            action: nil)
         navigationItem.backBarButtonItem?.tintColor = #colorLiteral(red: 0.1352768838, green: 0.1420838535, blue: 0.1778985262, alpha: 1)
     }
-    
-    func segueToWebView() {
-            let webViewVewController = WebViewViewController()
-            webViewVewController.delegate = self
-            webViewVewController.modalPresentationStyle = .fullScreen
-            self.present(webViewVewController, animated: true, completion: nil)
-        }
 }
 
