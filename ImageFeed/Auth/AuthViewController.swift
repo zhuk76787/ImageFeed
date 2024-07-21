@@ -12,17 +12,13 @@ protocol AuthViewControllerDelegate: AnyObject {
 }
 
 final class AuthViewController: UIViewController {
-    
     weak var delegate: AuthViewControllerDelegate?
-    
     private let showWebViewSegueIdentifier = "ShowWebView"
     private let buttonView = UIButton()
     
     override func viewDidLoad() {
         setupView()
-        
         configureBackButton()
-        
     }
     
     @objc
@@ -31,27 +27,27 @@ final class AuthViewController: UIViewController {
     }
     
     @objc
-        private func didTapBackButton() {
-            dismiss(animated: true, completion: nil)
-        }
+    private func didTapBackButton() {
+        dismiss(animated: true, completion: nil)
+    }
 }
 
 extension AuthViewController: WebViewViewControllerDelegate {
     func segueToWebView() {
-            let webViewVewController = WebViewViewController()
-            webViewVewController.delegate = self
-            webViewVewController.modalPresentationStyle = .fullScreen
-        let presenter = WebViewPresenter()
+        let webViewVewController = WebViewViewController()
+        webViewVewController.delegate = self
+        webViewVewController.modalPresentationStyle = .fullScreen
+        let authHelper = AuthHelper()
+        let presenter = WebViewPresenter(view: webViewVewController, delegate: self, authHelper: authHelper)
         webViewVewController.presenter = presenter
         self.present(webViewVewController, animated: true, completion: nil)
-        
-        }
+    }
     func webViewViewController(_ vc: WebViewViewController, didAuthenticateWithCode code: String) {
         delegate?.authViewController(self, didAuthenticateWithCode: code)       }
-       
-       func webViewViewControllerDidCancel(_ vc: WebViewViewController) {
-           vc.dismiss(animated: true, completion: nil)
-       }
+    
+    func webViewViewControllerDidCancel(_ vc: WebViewViewController) {
+        vc.dismiss(animated: true, completion: nil)
+    }
 }
 
 extension AuthViewController {
@@ -98,7 +94,7 @@ extension AuthViewController {
     private func configureBackButton() {
         navigationController?.navigationBar.backIndicatorImage = UIImage(named: "nav_back_button")
         navigationController?.navigationBar.backIndicatorTransitionMaskImage = UIImage(named: "nav_back_button")
-        navigationItem.backBarButtonItem = UIBarButtonItem(title: "", 
+        navigationItem.backBarButtonItem = UIBarButtonItem(title: "",
                                                            style: .plain,
                                                            target: nil,
                                                            action: nil)
