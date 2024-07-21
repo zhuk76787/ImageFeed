@@ -16,7 +16,7 @@ final class ProfileService {
     
     private var storage = OAuth2TokenStorage()
     static let shared = ProfileService(); private init() {}
-    private(set) var profile: Profile?
+    var profile: Profile?
     private var lastToken: String?
     private var task: URLSessionTask?
     
