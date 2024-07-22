@@ -25,7 +25,7 @@ final class ProfilePresenter: ProfilePresenterProtocol {
     }
     
     func updateAvatar() {
-        guard let profileImageURL = ProfileImageService.shared.avatarURL,
+        guard let profileImageURL = profileImageService.avatarURL,
               let url = URL(string: profileImageURL)
         else { return }
         view?.setAvatar(url: url)
