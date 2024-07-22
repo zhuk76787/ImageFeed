@@ -25,14 +25,14 @@ final class ProfilePresenter: ProfilePresenterProtocol {
     }
     
     func updateAvatar() {
-        guard let profileImageURL = ProfileImageService.shared.profileImageURL,
+        guard let profileImageURL = ProfileImageService.shared.avatarURL,
               let url = URL(string: profileImageURL)
         else { return }
         view?.setAvatar(url: url)
     }
     
     func updateProfileDetails() {
-        guard let profile = profileService.profileModel else {
+        guard let profile = profileService.profile else {
             print("Try to read: profileService.profileModel")
             return
         }

@@ -53,7 +53,7 @@ final class ProfileService {
             DispatchQueue.main.async {
                 switch result {
                 case .success(let profileResult):
-                    let profile = Profile(profileResult: profileResult)
+                    let profile = self.prepareProfile(data: profileResult)
                     self.profile = profile
                     print(profile)
                     completion(.success(profile))
@@ -68,4 +68,15 @@ final class ProfileService {
         }
         task.resume()
     }
+    func prepareProfile(data: ProfileResult) -> Profile {
+           let username = data.userName
+           let name = data.firstName + " " + (data.lastName ?? "")
+           let loginName = "@" + data.userName
+           let bio = data.bio
+           let profile = Profile(userName: username,
+                                 name: name,
+                                 loginName: loginName,
+                                 bio: bio)
+           return profile
+       }
 }
