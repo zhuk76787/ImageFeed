@@ -80,6 +80,7 @@ extension AuthViewController {
         buttonView.layer.cornerRadius = 16
         buttonView.layer.masksToBounds = true
         buttonView.translatesAutoresizingMaskIntoConstraints = false
+        buttonView.accessibilityIdentifier = "Authenticate"
         view.addSubview(buttonView)
         
         NSLayoutConstraint.activate([
