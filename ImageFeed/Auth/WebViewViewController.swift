@@ -34,7 +34,7 @@ final class WebViewViewController: UIViewController, WebViewViewControllerProtoc
         setupLayer()
         configureProgressIndicator()
         presenter?.viewDidLoad()
-        webView.accessibilityIdentifier = "UnsplashWebView"
+        
         webView.navigationDelegate = self
         estimatedProgressObservation = webView.observe(\.estimatedProgress,
                                                         options: [],
@@ -49,12 +49,10 @@ final class WebViewViewController: UIViewController, WebViewViewControllerProtoc
     }
     
     func setProgressValue(_ newValue: Float) {
-        //print("Setting progress value: \(newValue)")
         progressView.progress = newValue
     }
     
     func setProgressHidden(_ isHidden: Bool) {
-        //print("Setting progress hidden: \(isHidden)")
         progressView.isHidden = isHidden
     }
     
@@ -67,6 +65,7 @@ extension WebViewViewController {
     private func setupLayer() {
         webView.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(webView)
+        webView.accessibilityIdentifier = "UnsplashWebView"
         
         NSLayoutConstraint.activate([
             webView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),

@@ -68,7 +68,7 @@ extension ProfileViewController {
         
         let yesAction = UIAlertAction(
             title: "Да",
-            style: .default) { _ in
+            style: .default) { weak in
                 alert.dismiss(animated: true)
                 self.presenter?.logout()
                 
@@ -81,7 +81,7 @@ extension ProfileViewController {
         
         let noAction = UIAlertAction(
             title: "Нет",
-            style: .default) { _ in
+            style: .default) { weak in
                 alert.dismiss(animated: true)
             }
         
