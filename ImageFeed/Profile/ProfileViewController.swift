@@ -68,9 +68,9 @@ extension ProfileViewController {
         
         let yesAction = UIAlertAction(
             title: "Да",
-            style: .default) { weak in
+            style: .default) { [weak self] _ in
                 alert.dismiss(animated: true)
-                self.presenter?.logout()
+                self?.presenter?.logout()
                 
                 guard let window = UIApplication.shared.windows.first else {
                     assertionFailure("confirmExit Invalid Configuration")
@@ -81,7 +81,7 @@ extension ProfileViewController {
         
         let noAction = UIAlertAction(
             title: "Нет",
-            style: .default) { weak in
+            style: .default) { _ in
                 alert.dismiss(animated: true)
             }
         
