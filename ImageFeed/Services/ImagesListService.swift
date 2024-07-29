@@ -1,5 +1,10 @@
 import UIKit
 
+public protocol ImagesListServiceProtocol {
+    func fetchPhotosNextPage()
+    func changeLike(photoId: String, isLike: Bool, _ completion: @escaping (Result<Void, Error>) -> Void)
+}
+
 final class ImagesListService {
     
     static let shared = ImagesListService()

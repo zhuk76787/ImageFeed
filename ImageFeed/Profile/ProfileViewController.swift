@@ -8,34 +8,98 @@
 import UIKit
 import Kingfisher
 
-final class ProfileViewController: UIViewController {
+public protocol ProfileViewControllerProtocol: AnyObject {
+    var presenter: ProfilePresenterProtocol? { get set }
+    func updateView(data: Profile)
+    func setAvatar(url: URL)
+}
+
+final class ProfileViewController: UIViewController, ProfileViewControllerProtocol {
     private var imageView = UIImageView()
     private var nameLabel = UILabel()
     private var idLable = UILabel()
     private var statusLable = UILabel()
     private var button = UIButton()
-    private let profileService = ProfileService.shared
-    private let profileImageService = ProfileImageService.shared
-    private let profileLogoutService = ProfileLogoutService.shared
-    private var profileImageServiceObserver: NSObjectProtocol?
     
+    private let profileImageService = ProfileImageService.shared
+    
+    private var profileImageServiceObserver: NSObjectProtocol?
+    var presenter: ProfilePresenterProtocol?
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        presenter = ProfilePresenter(view: self)
+        setupView()
+        profileImageServiceObserver = NotificationCenter.default.addObserver(forName: ProfileImageService.didChangeNotification,
+                                                                             object: nil,
+                                                                             queue: .main) {
+            [weak self] _ in
+            guard let self = self else {return}
+            self.presenter?.updateAvatar()
+        }
+        presenter?.updateAvatar()
+        presenter?.updateProfileDetails()
+    }
+    @objc
+    private func didTapButton() {
+        showLogoutAlert()
+    }
+}
+    
+extension ProfileViewController {
+    func updateView(data: Profile) {
+        nameLabel.text = data.name
+        idLable.text = data.loginName
+        statusLable.text = data.bio
+    }
+    
+    func setAvatar(url: URL) {
+        imageView.kf.setImage(with: url)
+    }
+}
+
+extension ProfileViewController {
+    private func showLogoutAlert() {
+        let alert = UIAlertController(
+            title: "Пока, пока!",
+            message: "Уверены что хотите выйти?",
+            preferredStyle: .alert
+        )
+        
+        let yesAction = UIAlertAction(
+            title: "Да",
+            style: .default) { [weak self] _ in
+                alert.dismiss(animated: true)
+                self?.presenter?.logout()
+                
+                guard let window = UIApplication.shared.windows.first else {
+                    assertionFailure("confirmExit Invalid Configuration")
+                    return
+                }
+                window.rootViewController = SplashViewController()
+            }
+        
+        let noAction = UIAlertAction(
+            title: "Нет",
+            style: .default) { _ in
+                alert.dismiss(animated: true)
+            }
+        
+        alert.addAction(yesAction)
+        alert.addAction(noAction)
+        
+        present(alert, animated: true)
+    }
+}
+
+extension ProfileViewController {
+    private func  setupView() {
         view.backgroundColor = #colorLiteral(red: 0.1352768838, green: 0.1420838535, blue: 0.1778985262, alpha: 1)
         profileImageConfiguration()
         nameLableConfiguration()
         idLableConfiguration()
         statusLableConfiguration()
         buttonConfiguration()
-        profileImageServiceObserver = NotificationCenter.default.addObserver(forName: ProfileImageService.didChangeNotification,
-                                                                             object: nil,
-                                                                             queue: .main) { 
-            [weak self] _ in
-            guard let self = self else {return}
-            self.updateAvatar()
-        }
-        updateAvatar()
     }
     
     private func profileImageConfiguration() {
@@ -45,6 +109,7 @@ final class ProfileViewController: UIViewController {
         imageView.layer.cornerRadius = 35
         imageView.layer.masksToBounds = true
         imageView.translatesAutoresizingMaskIntoConstraints = false
+        imageView.accessibilityIdentifier = "Avatar image"
         view.addSubview(imageView)
         NSLayoutConstraint.activate([
             imageView.widthAnchor.constraint(equalToConstant: 70),
@@ -55,7 +120,6 @@ final class ProfileViewController: UIViewController {
     }
     
     private func nameLableConfiguration() {
-        nameLabel.text = "\(profileService.profile?.name ?? "Екатерина Новикова")"
         nameLabel.textColor = #colorLiteral(red: 1, green: 0.9999999404, blue: 1, alpha: 1)
         nameLabel.font = UIFont.boldSystemFont(ofSize: 23)
         nameLabel.translatesAutoresizingMaskIntoConstraints = false
@@ -69,7 +133,6 @@ final class ProfileViewController: UIViewController {
     }
     
     private func idLableConfiguration() {
-        idLable.text = "\(profileService.profile?.loginName ?? "@ekaterina_nov")"
         idLable.textColor = #colorLiteral(red: 0.6823529412, green: 0.6862745098, blue: 0.7058823529, alpha: 1)
         idLable.font = UIFont.systemFont(ofSize: 13, weight: .regular)
         idLable.translatesAutoresizingMaskIntoConstraints = false
@@ -83,7 +146,6 @@ final class ProfileViewController: UIViewController {
     }
     
     private func statusLableConfiguration() {
-        statusLable.text = "\(profileService.profile?.bio ?? "Hellow, world!")"
         statusLable.textColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)
         idLable.font = UIFont.systemFont(ofSize: 13, weight: .regular)
         statusLable.translatesAutoresizingMaskIntoConstraints = false
@@ -106,6 +168,7 @@ final class ProfileViewController: UIViewController {
         )
         button.tintColor = #colorLiteral(red: 0.9771148562, green: 0.5101671815, blue: 0.4975126386, alpha: 1)
         button.translatesAutoresizingMaskIntoConstraints = false
+        button.accessibilityIdentifier = "Logout button"
         view.addSubview(button)
         NSLayoutConstraint.activate([
             button.widthAnchor.constraint(equalToConstant: 24),
@@ -113,54 +176,5 @@ final class ProfileViewController: UIViewController {
             button.centerYAnchor.constraint(equalTo: imageView.centerYAnchor),
             button.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -24)
         ])
-    }
-    
-    @objc
-    private func didTapButton() {
-        showLogoutAlert()
-    }
-    
-    private func updateAvatar() {
-        guard
-            let profileImageURL = profileImageService.avatarURL,
-            let url = URL(string: profileImageURL)
-        else {return}
-        imageView.kf.setImage(with: url,
-                              placeholder: UIImage(named: "placeholder"))
-    }
-    
-}
-
-extension ProfileViewController {
-    private func showLogoutAlert() {
-        let alert = UIAlertController(
-            title: "Пока, пока!",
-            message: "Уверены что хотите выйти?",
-            preferredStyle: .alert
-        )
-        
-        let yesAction = UIAlertAction(
-            title: "Да",
-            style: .default) { _ in
-                alert.dismiss(animated: true)
-                self.profileLogoutService.logout()
-                
-                guard let window = UIApplication.shared.windows.first else {
-                    assertionFailure("confirmExit Invalid Configuration")
-                    return
-                }
-                window.rootViewController = SplashViewController()
-            }
-        
-        let noAction = UIAlertAction(
-            title: "Нет",
-            style: .default) { _ in
-                alert.dismiss(animated: true)
-            }
-        
-        alert.addAction(yesAction)
-        alert.addAction(noAction)
-        
-        present(alert, animated: true)
     }
 }

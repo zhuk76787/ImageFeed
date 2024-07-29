@@ -77,7 +77,8 @@ extension ImagesListViewController: UITableViewDataSource {
               let imageView = imageListCell.imageCell else {
             return imageListCell
         }
-        imageListCell.delegate = self
+        
+        imageListCell.setDelegate(self)
         
         imageView.kf.indicatorType = .activity
         imageView.kf.setImage(with: url) { result in
@@ -131,6 +132,8 @@ extension ImagesListViewController {
         willDisplay cell: UITableViewCell,
         forRowAt indexPath: IndexPath
     ) {
+        if ProcessInfo.processInfo.arguments.contains("Test mode") { return }
+        
         if indexPath.row + 1 == photos.count {
             imagesListService.fetchPhotosNextPage()
         }
@@ -161,11 +164,10 @@ extension ImagesListViewController: ImagesListCellDelegate {
             case .success:
                 self.photos = self.imagesListService.photos
                 cell.setImageLike(isLiked: self.photos[indexPath.row].isLiked)
-                UIBlockingProgressHUD.dismiss()
             case .failure:
-                UIBlockingProgressHUD.dismiss()
                 print("[ImagesListViewController]: ImagesListCellDelegate error: \(result)")
             }
+            UIBlockingProgressHUD.dismiss()
         }
     }
 }

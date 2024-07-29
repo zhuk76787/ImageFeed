@@ -7,15 +7,9 @@
 
 import Foundation
 
-struct Profile {
-    let userName: String
-    let name: String
-    let loginName: String
-    let bio:String?
-    init(profileResult: ProfileResult) {
-        self.userName = profileResult.userName
-        self.name = "\(profileResult.firstName) \(profileResult.lastName ?? "")"
-        self.loginName = "@\(profileResult.userName)"
-        self.bio = profileResult.bio
-    }
+public struct Profile {
+    public let userName: String
+    public let name: String
+    public let loginName: String
+    public let bio:String?
 }

@@ -14,7 +14,7 @@ protocol ImagesListCellDelegate: AnyObject {
 
 final class ImagesListCell: UITableViewCell {
     static let reuseIdentifier = "ImagesListCell"
-    weak var delegate: ImagesListCellDelegate?
+    private weak var delegate: ImagesListCellDelegate?
     
     @IBOutlet weak var imageCell: UIImageView!
     @IBOutlet weak var likeButton: UIButton!
@@ -41,5 +41,9 @@ final class ImagesListCell: UITableViewCell {
     func setImageLike(isLiked: Bool) {
         guard let imageLike = UIImage(named: isLiked ? "like_button_on" : "like_button_off") else { return }
         likeButton.setImage(imageLike, for: .normal)
+    }
+    
+    func setDelegate(_ delegate: ImagesListCellDelegate) {
+        self.delegate = delegate
     }
 }
